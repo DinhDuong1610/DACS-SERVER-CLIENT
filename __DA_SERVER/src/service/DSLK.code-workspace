@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": "../../../../IT/DSA/_CODE/DSLK"
+		},
+		{
+			"path": "../../../../VKU_SOCKET"
+		},
+		{
+			"path": "../.."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"iostream": "cpp"
+		}
+	}
+}

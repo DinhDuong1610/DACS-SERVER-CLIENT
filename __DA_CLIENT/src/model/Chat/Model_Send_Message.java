@@ -6,6 +6,33 @@ public class Model_Send_Message {
     private int fromUserID;
     private int toUserID;
     private String text;
+    private String time;
+    
+    public Model_Send_Message(int fromUserID, int toUserID, String text, String time) {
+		super();
+		this.fromUserID = fromUserID;
+		this.toUserID = toUserID;
+		this.text = text;
+		this.time = time;
+	}
+
+	public Model_Send_Message() {
+    }
+
+
+    public JSONObject toJsonObject() {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("type", "sendMessage");
+            json.put("fromUserID", fromUserID);
+            json.put("toUserID", toUserID);
+            json.put("text", text);
+            json.put("time", time);
+            return json;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     public int getFromUserID() {
         return fromUserID;
@@ -31,26 +58,14 @@ public class Model_Send_Message {
         this.text = text;
     }
 
-    public Model_Send_Message(int fromUserID, int toUserID, String text) {
-        this.fromUserID = fromUserID;
-        this.toUserID = toUserID;
-        this.text = text;
-    }
+	public String getTime() {
+		return time;
+	}
 
-    public Model_Send_Message() {
-    }
+	public void setTime(String time) {
+		this.time = time;
+	}
 
+    
 
-    public JSONObject toJsonObject() {
-        try {
-            JSONObject json = new JSONObject();
-            json.put("type", "sendMessage");
-            json.put("fromUserID", fromUserID);
-            json.put("toUserID", toUserID);
-            json.put("text", text);
-            return json;
-        } catch (Exception e) {
-            return null;
-        }
-    }
 }

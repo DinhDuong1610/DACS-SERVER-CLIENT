@@ -4,6 +4,7 @@ import java.awt.*;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 
 import net.miginfocom.swing.MigLayout;
 import view.MainUI;
@@ -14,6 +15,7 @@ import view.ChatUI.event.PublicEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.ScrollPaneConstants;
 
 import model.Chat.Model_User_Account;
@@ -29,7 +31,7 @@ public class Menu_Left extends JPanel{
 
 	public Menu_Left() {
 		setSize(300, 803);
-		setLayout(new MigLayout("fillx, filly", "0[300]0", "0[50]0[100%,fill]0"));
+		setLayout(new MigLayout("fillx, filly", "0[300]0", "0[50]0[35]0[100%,fill]0"));
 		JPanel panel_menu = new JPanel();
 		add(panel_menu, "width 300:300:300, wrap");
 		panel_menu.setLayout(new GridLayout(1, 2, 0, 0));
@@ -54,6 +56,22 @@ public class Menu_Left extends JPanel{
 		bt_chatGroup.setIcon(new ImageIcon((new ImageIcon((MainUI.class.getResource("/images/icon/chatgroup.png"))).getImage())));
 		panel_menu_list = new JLayeredPane();
 		panel_menu_list.setLayout(new MigLayout("fillx", "2[300]2", "3[]3"));
+		
+		JTextField tf_searchUser = new JTextField();
+		tf_searchUser.setFont(new Font("SansSerif", Font.PLAIN, 18));
+		tf_searchUser.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String user = tf_searchUser.getText();
+                if(searchUser(user)) {
+//                	PublicEvent.getInstance().getEventMenuLeft().newUser(list_user);
+                }
+                else {
+                	JOptionPane.showMessageDialog(panel_menu_list, "NOT FOUND USER");
+                }
+            }
+        });
+		add(tf_searchUser, "width 300:300:300, height 35:35:35, wrap");
 		
 		userAccount = new ArrayList<>();
         PublicEvent.getInstance().addEventMenuLeft(new EventMenuLeft() {
@@ -108,6 +126,15 @@ public class Menu_Left extends JPanel{
 //		}
 //		panel_menu_list.repaint();
 //		panel_menu_list.revalidate();
+	}
+	
+	public boolean searchUser(String userName) {
+		for(Model_User_Account user : userAccount) {
+			if(user.getUserName().equalsIgnoreCase(userName)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public JLayeredPane getPanel_menu_list() {

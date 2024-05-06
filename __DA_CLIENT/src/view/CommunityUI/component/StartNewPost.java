@@ -17,12 +17,17 @@ import javax.swing.JTextArea;
 import javax.swing.JButton;
 import javax.swing.ScrollPaneConstants;
 
+import model.ImageDecoder;
+import model.Chat.Model_User_Account;
+
 public class StartNewPost extends JPanel{
 	private ImageAvatar imageAvatar;
 	private JTextArea textArea;
 	private JButton bt_dangbai;
+	private Model_User_Account user;
 	
-	public StartNewPost(String userName) {
+	public StartNewPost(Model_User_Account user) {
+		this.user = user;
 		
 		JPanel panel_title = new JPanel();
 		panel_title.setBackground(Color.white);
@@ -31,9 +36,10 @@ public class StartNewPost extends JPanel{
 		
 		imageAvatar = new ImageAvatar();
 		imageAvatar.setBorderSize(0);
-		imageAvatar.setImage(new ImageIcon(getClass().getResource("/images/testing/avatar.png")));
+//		imageAvatar.setImage(new ImageIcon(getClass().getResource("/images/testing/avatar.png")));
+		imageAvatar.setImage(ImageDecoder.decodeStringToImageIcon(user.getAvatar_path()));
 		
-		JLabel lb_userName = new JLabel(userName);
+		JLabel lb_userName = new JLabel(user.getUserName());
 		lb_userName.setFont(new Font("Tahoma", Font.BOLD, 22));
 		GroupLayout gl_panel_title = new GroupLayout(panel_title);
 		gl_panel_title.setHorizontalGroup(
@@ -114,6 +120,14 @@ public class StartNewPost extends JPanel{
 
 	public JButton getBt_dangbai() {
 		return bt_dangbai;
+	}
+
+	public Model_User_Account getUser() {
+		return user;
+	}
+
+	public void setUser(Model_User_Account user) {
+		this.user = user;
 	}
 	
 	

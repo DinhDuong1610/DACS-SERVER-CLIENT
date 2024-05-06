@@ -2,6 +2,7 @@ package view.CommunityUI.form;
 
 import javax.swing.*;
 
+import model.Chat.Model_User_Account;
 import model.community.Model_Project;
 import net.miginfocom.swing.MigLayout;
 import service.Service;
@@ -28,6 +29,10 @@ public class HomeCommu extends JPanel{
 		Service.getInstance().listPost(project.getProjectId());
 		body.setVisible(true);
 		body.getTitle().getLb_nameProject().setText(project.getProjectName());
+	}
+	
+	public void setUser(Model_User_Account user) {
+		body.setUser(user);
 	}
 	
 	public Menu_Left getMenuLeft() {

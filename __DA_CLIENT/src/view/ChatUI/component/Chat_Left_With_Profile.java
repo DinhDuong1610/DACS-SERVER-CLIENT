@@ -2,9 +2,13 @@ package view.ChatUI.component;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.*;
 
+import model.ImageDecoder;
+import model.Chat.Model_User_Account;
 import view.ChatUI.swing.ImageAvatar;
 
 public class Chat_Left_With_Profile extends JLayeredPane{
@@ -12,7 +16,7 @@ public class Chat_Left_With_Profile extends JLayeredPane{
 	private JLayeredPane jLayeredPane;
 	private Chat_Item txt;
 	
-	public Chat_Left_With_Profile() {
+	public Chat_Left_With_Profile(Model_User_Account user) {
 		jLayeredPane = new JLayeredPane();
 		IaImage = new ImageAvatar();
 		txt = new Chat_Item();
@@ -20,8 +24,9 @@ public class Chat_Left_With_Profile extends JLayeredPane{
 		setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 		
 		IaImage.setBorderSize(0);
-		IaImage.setImage(new ImageIcon(getClass().getResource("/images/testing/avatar.png")));
-        IaImage.setMaximumSize(new Dimension(31, 31));
+//		IaImage.setImage(new ImageIcon(getClass().getResource("/images/testing/avatar.png")));
+		IaImage.setImage(ImageDecoder.decodeStringToImageIcon(user.getAvatar_path()));
+		IaImage.setMaximumSize(new Dimension(31, 31));
         IaImage.setMinimumSize(new Dimension(31, 31));
         IaImage.setPreferredSize(new Dimension(31, 31));
         
@@ -69,8 +74,11 @@ public class Chat_Left_With_Profile extends JLayeredPane{
     }
     
     
-    public void setTime() {
-        txt.setTime("10:30 PM"); 
+    public void setTime(String time) {
+//        Date currentTime = new Date();
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+//        String formattedTime = dateFormat.format(currentTime);
+        txt.setTime(time); 
     }
     
     public void setFile(String fileName, String fileSize) {

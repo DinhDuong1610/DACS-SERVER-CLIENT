@@ -1,22 +1,23 @@
 package model;
 
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.util.Base64;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 public class ImageDecoder {
-    public static ImageIcon decodeImageIcon(String encodedImage) {
-        byte[] imageBytes = Base64.getDecoder().decode(encodedImage);
-        ImageIcon imageIcon = null;
+    public static ImageIcon decodeStringToImageIcon(String encodedImage) {
         try {
-            ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(imageBytes));
-            imageIcon = (ImageIcon) ois.readObject();
-            ois.close();
+            byte[] byteArr = Base64.getDecoder().decode(encodedImage);
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArr);
+            BufferedImage image = ImageIO.read(byteArrayInputStream);
+            return new ImageIcon(image);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return imageIcon;
+        return null;
     }
 }

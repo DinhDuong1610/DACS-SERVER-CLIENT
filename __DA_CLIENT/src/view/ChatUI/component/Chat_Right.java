@@ -39,11 +39,11 @@ public class Chat_Right extends JLayeredPane{
         txt.setImage(true, image);
     }
 
-    public void setTime() {
-        Date currentTime = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
-        String formattedTime = dateFormat.format(currentTime);
-        txt.setTime(formattedTime); 
+    public void setTime(String time) {
+//        Date currentTime = new Date();
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+//        String formattedTime = dateFormat.format(currentTime);
+        txt.setTime(time); 
     }
     
     public void setFile(String fileName, String fileSize) {

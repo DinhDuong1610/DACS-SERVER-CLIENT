@@ -11,6 +11,8 @@ import java.awt.Font;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 
+import model.ImageDecoder;
+import model.Chat.Model_User_Account;
 import model.community.Model_Post;
 import view.ChatUI.swing.ImageAvatar;
 import view.ChatUI.swing.JIMSendTextPane;
@@ -18,9 +20,11 @@ import view.ChatUI.swing.JIMSendTextPane;
 public class Item_post extends JPanel{
 	private ImageAvatar imageAvatar;
 	private Model_Post post;
+	private Model_User_Account user;
 
-	public Item_post(Model_Post post) {
+	public Item_post(Model_User_Account user, Model_Post post) {
 		this.post = post;
+		this.user = user;
 		setBorder(new EmptyBorder(0, 20, 10, 10));
 		
 		JPanel panel_title = new JPanel();
@@ -66,6 +70,7 @@ public class Item_post extends JPanel{
 		imageAvatar = new ImageAvatar();
 		imageAvatar.setBorderSize(0);
 		imageAvatar.setImage(new ImageIcon(getClass().getResource("/images/testing/avatar.png")));
+//		imageAvatar.setImage(ImageDecoder.decodeStringToImageIcon(user.getAvatar_path()));
 		
 		JLabel lb_userName = new JLabel(post.getUserName());
 		lb_userName.setFont(new Font("Tahoma", Font.BOLD, 22));
@@ -101,4 +106,14 @@ public class Item_post extends JPanel{
 		panel_content.setBackground(Color.white);
 		panel_title.setBackground(Color.white);
 	}
+
+	public Model_User_Account getUser() {
+		return user;
+	}
+
+	public void setUser(Model_User_Account user) {
+		this.user = user;
+	}
+	
+	
 }

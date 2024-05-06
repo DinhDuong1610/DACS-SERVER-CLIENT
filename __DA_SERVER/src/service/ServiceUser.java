@@ -17,10 +17,13 @@ import model.Model_User_Account;
 public class ServiceUser {
     private final String SELECT_USER_ACCOUNT = "select User_ID, UserName,fullName, Email, Phone, Address, Avatar_path from user_account";
     private final String INSERT_USER = "insert into user (UserName, `Password`) values (?,?)";
-    private final String INSERT_USER_ACCOUNT = "insert into user_account (User_ID, UserName, fullName, Email, Phone, Address, Avatar_path, status) values (?,?, '', '', '', '', '', 1)";
+    private final String INSERT_USER_ACCOUNT = "insert into user_account (User_ID, UserName, fullName, Email, Phone, Address, Avatar_path, status) values (? ,? , ?, ?, ?, ?, ?, 1)";
     private final String CHECK_USER = "select User_ID from user where UserName =? limit 1";
     private final String LOGIN = "select User_ID, UserName,fullName, Email, Phone, Address, Avatar_path from user_account where user_Id=?";
     private final String CHECK_LOGIN = "select User_ID from user where userName=? and password=?";
+    private final String UPDATE_USER_INFO = "update user_account set fullname=?, email=?, phone=?, address=?, avatar_path=? where user_Id=?" ;
+    private final String SELECT_CHECK_CONTACT = "SELECT history FROM history_message WHERE (user1=? and user2=?) or (user1=? and user2=?)";
+
     //  Instance
     private final Connection con;
     
@@ -55,15 +58,16 @@ public class ServiceUser {
                 p.execute();
                 r = p.getGeneratedKeys();
                 r.first();
-                int userID = r.getInt(1);
+                user_Id = r.getInt(1);
                 r.close();
                 p.close();
                 //  Create user account
-                p = con.prepareStatement(INSERT_USER_ACCOUNT);
-                p.setInt(1, userID);
-                p.setString(2, data.getUserName());
-                p.execute();
-                p.close();
+//                p = con.prepareStatement(INSERT_USER_ACCOUNT);
+//                p.setInt(1, userID);
+//                p.setString(2, data.getUserName());
+//                p.execute();
+//                p.close();
+                
 //                con.commit();
 //                con.setAutoCommit(true);
                 message.setAction(true);
@@ -83,6 +87,39 @@ public class ServiceUser {
             }
         }
         return message;
+    }
+    
+    public void registerInfo(Model_User_Account data) {
+        try {
+          PreparedStatement p = con.prepareStatement(INSERT_USER_ACCOUNT);
+          p.setInt(1, user_Id);
+          p.setString(2, data.getUserName());
+          p.setString(3, data.getFullName());
+          p.setString(4, data.getEmail());
+          p.setString(5, data.getPhone());
+          p.setString(6, data.getAddress());
+          p.setString(7, data.getAvatar_path());
+          p.execute();
+          p.close();
+        } catch (SQLException e) {
+        	e.printStackTrace();
+        }
+    }
+    
+    public void updateInfo(Model_User_Account data) {
+        try {
+          PreparedStatement p = con.prepareStatement(UPDATE_USER_INFO);
+          p.setString(1, data.getFullName());
+          p.setString(2, data.getEmail());
+          p.setString(3, data.getPhone());
+          p.setString(4, data.getAddress());
+          p.setString(5, data.getAvatar_path());
+          p.setInt(6, user_Id);
+          p.execute();
+          p.close();
+        } catch (SQLException e) {
+        	e.printStackTrace();
+        }
     }
     
     public Model_Message login(Model_Login login){
@@ -168,5 +205,25 @@ public class ServiceUser {
 			e.printStackTrace();
 		}
         return list;
+    }
+    
+    public boolean checkContact(int user_Id2) {
+    	boolean check = false;
+    	try {
+            PreparedStatement p = con.prepareStatement(SELECT_CHECK_CONTACT);
+            p.setInt(1, user_Id);
+            p.setInt(2, user_Id2);
+            p.setInt(3, user_Id2);
+            p.setInt(4, user_Id);
+            ResultSet r = p.executeQuery();
+            if (r.next()) {
+            	check = true;
+            }
+            r.close();
+            p.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	return check;
     }
 }

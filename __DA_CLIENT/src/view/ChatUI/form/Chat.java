@@ -9,6 +9,7 @@ import model.Chat.Model_Receive_Message;
 import model.Chat.Model_Send_Message;
 import model.Chat.Model_User_Account;
 import net.miginfocom.swing.MigLayout;
+import service.Service;
 import view.ChatUI.component.Chat_Body;
 import view.ChatUI.component.Chat_Bottom;
 import view.ChatUI.component.Chat_Title;
@@ -62,10 +63,18 @@ public class Chat extends JPanel{
     public void setUser(Model_User_Account user) {
         chatTitle.setUserName(user);
         chatBottom.setUser(user);
+        chatBody.setUser(user);
         chatBody.clearChat();
+        Service.getInstance().historyMessage(user.getUser_Id());
     }
 
     public void updateUser(Model_User_Account user) {
         chatTitle.updateUser(user);
     }
+
+	public Chat_Body getChatBody() {
+		return chatBody;
+	}
+    
+    
 }

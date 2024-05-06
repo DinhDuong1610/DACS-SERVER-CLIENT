@@ -10,6 +10,7 @@ import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import controller.CardLayout.CardLayout_MainUI;
 import controller.CardLayout.CardLayout_User;
 import model.ImageDecoder;
+import model.ImageEncoder;
 import model.Chat.Model_User_Account;
 import model.community.Model_Project;
 import view.CalendarUI.CalendarUI;
@@ -105,6 +106,7 @@ public class MainUI extends JFrame {
 	private JLabel lb_tenTaiKhoan;
 	private JLabel lb_tenTaiKhoan_edit;
 	private JButton bt_user_avatar_edit;
+	private String imagePath;
 	
 	private JLayeredPane body;
 	private View_Image view_Image;
@@ -114,6 +116,8 @@ public class MainUI extends JFrame {
 	private JFrame frameLogin;
 	private JTextArea ta_DiaChi;
 	private Model_User_Account user;
+
+	private CalendarUI calendarUI;
 
 
 	public static void main(String[] args) {
@@ -440,7 +444,9 @@ public class MainUI extends JFrame {
 		bt_user_edit_save = new JButton("LƯU THAY ĐỔI");
 		bt_user_edit_save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				editUser();
+				Model_User_Account account = new Model_User_Account(999, tf_user_TenTaiKhoan_edit.getText(), tf_user_HoVaTen_edit.getText(), tf_user_email_edit.getText(), tf_user_sdt_edit.getText(), ta_DiaChi_edit.getText(), user.getAvatar_path(), true);
+				Service.getInstance().updateInfo(account.toJsonObject("updateInfo"));
+				editUser();
 			}
 		});
 		bt_user_edit_save.setFont(new Font("Tahoma", Font.BOLD, 22));
@@ -454,6 +460,11 @@ public class MainUI extends JFrame {
 //		panel_card_user_edit.add(lb_tenTaiKhoan_edit);
 //		
 		bt_user_avatar_edit = new JButton("");
+		bt_user_avatar_edit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				imagePath = ImageEncoder.encodeImageToString(label_user_avatar_edit);
+			}
+		});
 		bt_user_avatar_edit.setIcon(new ImageIcon(MainUI.class.getResource("/images/icon/icon_camera.png")));
 		bt_user_avatar_edit.setBounds(83, 435, 350, 37);
 		panel_card_user_edit.add(bt_user_avatar_edit);
@@ -488,7 +499,7 @@ public class MainUI extends JFrame {
 		
 	// <Panel_card_calendar>
 		panel_card_calender.setLayout(new GridLayout(1,1));
-		CalendarUI calendarUI = new CalendarUI();
+		calendarUI = new CalendarUI();
 		panel_card_calender.add(calendarUI);
 	// <Panel_card_calendar/>
 
@@ -524,8 +535,6 @@ public class MainUI extends JFrame {
 		
 // <LOGIN/>		
 		
-		
-		
 		initEvent();
 		Service.getInstance(this).startClient();
 		
@@ -552,6 +561,7 @@ public class MainUI extends JFrame {
             @Override
             public void selectedProject(Model_Project project) {
             	home_community.selectedProject(project);
+            	home_community.setUser(user);
             	
             }
         });
@@ -570,6 +580,7 @@ public class MainUI extends JFrame {
     }
 
 	public void loadUser(Model_User_Account account) {
+		this.user = account;
 		tf_user_TenTaiKhoan.setText(account.getUserName());
 		tf_user_HoVaTen.setText(account.getFullName());
 		tf_user_email.setText(account.getEmail());
@@ -577,7 +588,8 @@ public class MainUI extends JFrame {
 		ta_DiaChi.setText(account.getAddress());
 		lb_tenTaiKhoan.setText(account.getUserName());
 		if(!account.getAvatar_path().isEmpty()) {
-			label_user_avatar.setIcon(new ImageIcon(ImageDecoder.decodeImageIcon(account.getAvatar_path()).getImage().getScaledInstance(label_user_avatar.getWidth(), label_user_avatar.getHeight(), Image.SCALE_SMOOTH)));
+			imagePath = account.getAvatar_path();
+			label_user_avatar.setIcon(new ImageIcon(ImageDecoder.decodeStringToImageIcon(user.getAvatar_path()).getImage().getScaledInstance(label_user_avatar.getWidth(), label_user_avatar.getHeight(), Image.SCALE_SMOOTH)));
 		}
 	}
 	
@@ -587,6 +599,7 @@ public class MainUI extends JFrame {
 		tf_user_email_edit.setText(tf_user_email.getText());
 		tf_user_sdt_edit.setText(tf_user_sdt.getText());
 		ta_DiaChi_edit.setText(ta_DiaChi.getText());
+		label_user_avatar_edit.setIcon(new ImageIcon(ImageDecoder.decodeStringToImageIcon(user.getAvatar_path()).getImage().getScaledInstance(label_user_avatar.getWidth(), label_user_avatar.getHeight(), Image.SCALE_SMOOTH)));
 	}
 	
 	public void loadUserAfterEdit() {
@@ -596,13 +609,16 @@ public class MainUI extends JFrame {
 		tf_user_sdt.setText(tf_user_sdt_edit.getText());
 		ta_DiaChi.setText(ta_DiaChi_edit.getText());
 		lb_tenTaiKhoan.setText(tf_user_TenTaiKhoan_edit.getText());
+		label_user_avatar.setIcon(new ImageIcon(ImageDecoder.decodeStringToImageIcon(user.getAvatar_path()).getImage().getScaledInstance(label_user_avatar.getWidth(), label_user_avatar.getHeight(), Image.SCALE_SMOOTH)));
 	}
 	
-//	public void editUser() {
-//		user.setEmail(getName());
-//		user.setFullName(getName());
-//		user.
-//	}
+	public void editUser() {
+		user.setFullName(tf_user_HoVaTen_edit.getText());
+		user.setEmail(tf_user_email_edit.getText());
+		user.setPhone(tf_user_sdt_edit.getText());
+		user.setAddress(ta_DiaChi_edit.getText());
+		user.setAvatar_path(imagePath);
+	}
 
 	public Login getLogin() {
 		return login;
@@ -795,6 +811,27 @@ public class MainUI extends JFrame {
 	public HomeCommu getHome_community() {
 		return home_community;
 	}
+
+
+	public CalendarUI getCalendarUI() {
+		return calendarUI;
+	}
+
+
+	public void setCalendarUI(CalendarUI calendarUI) {
+		this.calendarUI = calendarUI;
+	}
+
+
+	public Home getHome() {
+		return home;
+	}
+
+
+	public void setHome_community(HomeCommu home_community) {
+		this.home_community = home_community;
+	}
+	
 	
 	
 	

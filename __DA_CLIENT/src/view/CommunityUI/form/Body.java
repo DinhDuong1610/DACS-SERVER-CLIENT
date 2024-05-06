@@ -9,6 +9,7 @@ import javax.swing.ScrollPaneConstants;
 
 import controller.CardLayout.CardLayout_Community;
 import controller.Community.Controller_Member;
+import model.Chat.Model_User_Account;
 import model.community.Model_Project;
 import net.miginfocom.swing.MigLayout;
 import service.Service;
@@ -52,11 +53,17 @@ public class Body extends JPanel{
 		dialog.setVisible(true);
 	}
 	
+	public void setUser(Model_User_Account user) {
+		page.setUser(user);
+	}
+	
 	public void cardLayout() {
 		CardLayout_Community action_cardLayout_Community = new CardLayout_Community(this);
 		getTitle().getBt_post().addActionListener(action_cardLayout_Community);
 		getTitle().getBt_event().addActionListener(action_cardLayout_Community);
 	}
+	
+	
 
 	public Title getTitle() {
 		return title;

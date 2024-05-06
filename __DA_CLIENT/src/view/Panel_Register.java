@@ -2,8 +2,15 @@ package view;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
 
 import javax.swing.*;
+
+import model.ImageDecoder;
+import model.ImageEncoder;
+import model.Chat.Model_User_Account;
+import service.Service;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -11,29 +18,29 @@ public class Panel_Register extends JPanel{
 	private JLabel label_user_avatar;
 	private JLabel label_user_TenTaiKhoan;
 	private JLabel label_user_HoVaTen;
-	private JLabel label_user_NgaySinh;
 	private JLabel label_user_email;
 	private JLabel label_user_sdt;
 	private JLabel label_user_DiaChi;
 	private JTextField tf_user_TenTaiKhoan;
 	private JTextField tf_user_HoVaTen;
-	private JTextField tf_user_NgaySinh;
 	private JTextField tf_user_email;
 	private JTextField tf_user_sdt;
 	private JScrollPane scrollPane;
-	private JTextArea ta_DiaChi;
 	private JLabel lb_tenTaiKhoan;
 	private JLabel lblNewLabel;
 	private JButton bt_chonAnh;
 	private JButton bt_save;
+	
+	private String imagePath;
+	private JDialog dialog;
 
-	public Panel_Register() {
+	public Panel_Register(JDialog dialog, String userName) {
+		this.dialog = dialog;
 		setSize(1390, 585);
 		setLayout(null);
 		
 		label_user_avatar = new JLabel("");
-		label_user_avatar.setOpaque(true);
-		label_user_avatar.setBackground(new Color(144, 238, 144));
+		label_user_avatar.setIcon(new ImageIcon((new ImageIcon((MainUI.class.getResource("/images/icon/default.jpeg"))).getImage().getScaledInstance(350, 350, Image.SCALE_SMOOTH))));
 		label_user_avatar.setBounds(83, 87, 350, 350);
 		add(label_user_avatar);
 		
@@ -47,27 +54,22 @@ public class Panel_Register extends JPanel{
 		label_user_HoVaTen.setBounds(503, 145, 217, 48);
 		add(label_user_HoVaTen);
 		
-		label_user_NgaySinh = new JLabel("NGÀY SINH");
-		label_user_NgaySinh.setFont(new Font("Tahoma", Font.BOLD, 25));
-		label_user_NgaySinh.setBounds(503, 203, 217, 48);
-		add(label_user_NgaySinh);
-		
 		label_user_email = new JLabel("EMAIL");
 		label_user_email.setFont(new Font("Tahoma", Font.BOLD, 25));
-		label_user_email.setBounds(503, 261, 217, 48);
+		label_user_email.setBounds(503, 203, 217, 48);
 		add(label_user_email);
 		
 		label_user_sdt = new JLabel("SỐ ĐIỆN THOẠI");
 		label_user_sdt.setFont(new Font("Tahoma", Font.BOLD, 25));
-		label_user_sdt.setBounds(503, 319, 217, 48);
+		label_user_sdt.setBounds(503, 261, 217, 48);
 		add(label_user_sdt);
 		
 		label_user_DiaChi = new JLabel("ĐỊA CHỈ");
 		label_user_DiaChi.setFont(new Font("Tahoma", Font.BOLD, 25));
-		label_user_DiaChi.setBounds(503, 377, 217, 48);
+		label_user_DiaChi.setBounds(503, 319, 217, 48);
 		add(label_user_DiaChi);
 		
-		tf_user_TenTaiKhoan = new JTextField();
+		tf_user_TenTaiKhoan = new JTextField(userName);
 		tf_user_TenTaiKhoan.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		tf_user_TenTaiKhoan.setColumns(10);
 		tf_user_TenTaiKhoan.setBounds(745, 87, 575, 48);
@@ -79,30 +81,25 @@ public class Panel_Register extends JPanel{
 		tf_user_HoVaTen.setBounds(745, 145, 575, 48);
 		add(tf_user_HoVaTen);
 		
-		tf_user_NgaySinh = new JTextField();
-		tf_user_NgaySinh.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		tf_user_NgaySinh.setColumns(10);
-		tf_user_NgaySinh.setBounds(745, 203, 575, 48);
-		add(tf_user_NgaySinh);
-		
 		tf_user_email = new JTextField();
 		tf_user_email.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		tf_user_email.setColumns(10);
-		tf_user_email.setBounds(745, 261, 575, 48);
+		tf_user_email.setBounds(745, 203, 575, 48);
 		add(tf_user_email);
 		
 		tf_user_sdt = new JTextField();
 		tf_user_sdt.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		tf_user_sdt.setColumns(10);
-		tf_user_sdt.setBounds(745, 319, 575, 48);
+		tf_user_sdt.setBounds(745, 261, 575, 48);
 		add(tf_user_sdt);
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(745, 377, 575, 121);
+		scrollPane.setBounds(745, 319, 575, 121);
 		add(scrollPane);
-		ta_DiaChi = new JTextArea();
-		ta_DiaChi.setLineWrap(true);
+		
+		JTextArea ta_DiaChi = new JTextArea();
 		ta_DiaChi.setWrapStyleWord(true);
+		ta_DiaChi.setLineWrap(true);
 		ta_DiaChi.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		scrollPane.setViewportView(ta_DiaChi);
 		
@@ -122,7 +119,7 @@ public class Panel_Register extends JPanel{
 		bt_chonAnh = new JButton("");
 		bt_chonAnh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				imagePath = ImageEncoder.encodeImageToString(label_user_avatar);
 			}
 		});
 		bt_chonAnh.setIcon(new ImageIcon(Panel_Register.class.getResource("/images/icon/icon_camera.png")));
@@ -130,8 +127,15 @@ public class Panel_Register extends JPanel{
 		add(bt_chonAnh);
 		
 		bt_save = new JButton("SAVE");
+		bt_save.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Model_User_Account user = new Model_User_Account(999, tf_user_TenTaiKhoan.getText(), tf_user_HoVaTen.getText(), tf_user_email.getText(), tf_user_sdt.getText(), ta_DiaChi.getText(), imagePath, true);
+				Service.getInstance().registerInfo(user.toJsonObject("registerInfo"));
+				dialog.dispose();
+			}
+		});
 		bt_save.setFont(new Font("Tahoma", Font.BOLD, 25));
-		bt_save.setBounds(597, 526, 167, 37);
+		bt_save.setBounds(596, 487, 167, 51);
 		add(bt_save);
 	}
 
@@ -141,10 +145,6 @@ public class Panel_Register extends JPanel{
 
 	public JTextField getTf_user_HoVaTen() {
 		return tf_user_HoVaTen;
-	}
-
-	public JTextField getTf_user_NgaySinh() {
-		return tf_user_NgaySinh;
 	}
 
 	public JTextField getTf_user_email() {
@@ -158,6 +158,4 @@ public class Panel_Register extends JPanel{
 	public JButton getBt_chonAnh() {
 		return bt_chonAnh;
 	}
-	
-	
 }

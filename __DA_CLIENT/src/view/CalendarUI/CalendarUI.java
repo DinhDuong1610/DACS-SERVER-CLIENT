@@ -6,10 +6,16 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import javax.swing.*;
 
@@ -22,7 +28,12 @@ import com.mindfusion.scheduling.ResourceDateEvent;
 import com.mindfusion.scheduling.ThemeType;
 import com.mindfusion.scheduling.model.Appointment;
 
+import model.calendar.Model_Calendar;
 import net.miginfocom.swing.MigLayout;
+import service.Service;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class CalendarUI extends JPanel{
 	
@@ -33,6 +44,7 @@ public class CalendarUI extends JPanel{
 	private int red, blue, green;
 	
 	public CalendarUI (){
+		
 		setLayout(new GridLayout(1, 1));
 		calendar = new Calendar();
 
@@ -43,8 +55,9 @@ public class CalendarUI extends JPanel{
 		        // Kiểm tra xem ngày được chọn có tồn tại không
 		        if (selectedDate != null) {
 		            // Kiểm tra xem có ngày trước đó được chọn hay không
-		            if (previousSelectedDate != null && !previousSelectedDate.equals(selectedDate)) {
-		                // Nếu có, xóa tất cả các mục "ADD" liên kết với ngày trước đó
+//		            if (previousSelectedDate != null && !previousSelectedDate.equals(selectedDate)) {
+		        	if (previousSelectedDate != null) {
+		        	// Nếu có, xóa tất cả các mục "ADD" liên kết với ngày trước đó
 		                removeAddItems();
 		            }
 		            Appointment app = new Appointment();
@@ -145,6 +158,12 @@ public class CalendarUI extends JPanel{
 		
 		                // Thêm mục "ADD" vào lịch
 		                calendar.getSchedule().getItems().add(app);
+		                
+//		                SimpleDateFormat dateFormat = new SimpleDateFormat("M/d/yyyy, hh:mm:ss a zzz", Locale.ENGLISH);
+//
+//		                // Chuyển từ DateTime sang String
+//		                String dateString = dateFormat.format(selectedDate);
+		                addCalendarToServer(tf_title.getText(), selectedDate.toShortDateString(), start, end, red + "," + green + "," + blue);
 		            } else {
 		                // Xử lý khi người dùng nhấn Cancel hoặc đóng cửa sổ
 		            }
@@ -321,4 +340,62 @@ public class CalendarUI extends JPanel{
 	        }
 	    }
 	}
+	
+	public void removeAllItems() {
+	    Iterator<Appointment> iterator = addItems.iterator();
+	    while (iterator.hasNext()) {
+	        Appointment item = iterator.next();
+            calendar.getSchedule().getItems().remove(item);
+            iterator.remove();
+	    }
+	}
+	
+	public void addCalendarToServer(String title, String day, String timeStart, String timeEnd, String color) {
+		Model_Calendar item = new Model_Calendar(0, title, day, timeStart, timeEnd, color);
+		Service.getInstance().addCalendar(item.toJsonObject("addCalendar"));
+	}
+	
+	
+	public void addCalendarFromServer(Model_Calendar item) {
+        SimpleDateFormat formatter = new SimpleDateFormat("M/d/yy");
+        DateTime dateTime = null;
+        
+            Date date;
+			try {
+				date = formatter.parse(item.getDay());
+	            dateTime = new DateTime(date);
+
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		
+		Appointment app = new Appointment();
+		app.setStartTime(dateTime); // Chuyển đổi DateTime thành Date
+		app.setEndTime(dateTime);   // Chuyển đổi DateTime thành Date
+        
+        app.setHeaderText(item.getTimeStart() + "-" + item.getTimeEnd() +" | "+ item.getTitle());
+        app.getStyle().setFont(new Font("arial", Font.BOLD, 15));
+        
+        String[] colorComponents = item.getColor().split(",");
+        red = Integer.parseInt(colorComponents[0]);
+        green = Integer.parseInt(colorComponents[1]);
+        blue = Integer.parseInt(colorComponents[2]);
+        app.getStyle().setBrush(new SolidBrush(new Color(red, green, blue)));
+        app.setLocked(true);
+        // Thêm mục "ADD" vào danh sách tạm thời
+        addItems.add(app);
+
+        // Thêm mục "ADD" vào lịch
+        calendar.getSchedule().getItems().add(app);
+	}
+
+	public Calendar getCalendar() {
+		return calendar;
+	}
+
+	public void setCalendar(Calendar calendar) {
+		this.calendar = calendar;
+	}
+	
+	
 }

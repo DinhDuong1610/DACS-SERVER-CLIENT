@@ -12,6 +12,8 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 
+import model.ImageDecoder;
+import model.Chat.Model_User_Account;
 import net.miginfocom.swing.MigLayout;
 import view.ChatUI.swing.ImageAvatar;
 import view.ChatUI.swing.JIMSendTextPane;
@@ -21,6 +23,7 @@ import javax.swing.SwingConstants;
 public class NewPost extends JPanel{
 	private ImageAvatar imageAvatar;
 	private JButton bt_newPost;
+	private Model_User_Account user;
 
 	public NewPost() {	
 		setLayout(new MigLayout("fillx", "100[fill]40", "15[]15"));
@@ -64,6 +67,15 @@ public class NewPost extends JPanel{
 
 	public JButton getBt_newPost() {
 		return bt_newPost;
+	}
+
+	public Model_User_Account getUser() {
+		return user;
+	}
+
+	public void setUser(Model_User_Account user) {
+		this.user = user;
+		imageAvatar.setImage(ImageDecoder.decodeStringToImageIcon(user.getAvatar_path()));
 	}
 
 	

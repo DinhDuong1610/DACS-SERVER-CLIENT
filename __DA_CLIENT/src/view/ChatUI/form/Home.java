@@ -29,4 +29,10 @@ public class Home extends JPanel{
     public void updateUser(Model_User_Account user) {
         chat.updateUser(user);
     }
+
+	public Chat getChat() {
+		return chat;
+	}
+    
+    
 }

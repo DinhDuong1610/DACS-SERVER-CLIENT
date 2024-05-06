@@ -9,6 +9,7 @@ import java.util.Date;
 import javax.swing.*;
 
 import controller.Community.Controller_Post;
+import model.Chat.Model_User_Account;
 import model.community.Model_Post;
 import model.community.Model_Project;
 import net.miginfocom.swing.MigLayout;
@@ -62,7 +63,7 @@ public class Page extends JPanel{
 	}
 	
 	public void startNewPost() {
-		startNewPost = new StartNewPost(Service.getInstance().getUser().getUserName());
+		startNewPost = new StartNewPost(Service.getInstance().getUser());
 		startNewPost.getBt_dangbai().addActionListener(action_post);
 //		result = JOptionPane.showOptionDialog(this, startNewPost, null, JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
 		dialog = new JDialog();
@@ -95,6 +96,11 @@ public class Page extends JPanel{
             sp.repaint(); 
         });
     }
+    
+	public void setUser(Model_User_Account user) {
+		news.setUser(user);
+		newPost.setUser(user);
+	}
 
 	public CardLayout getCardLayout_Page() {
 		return cardLayout_Page;

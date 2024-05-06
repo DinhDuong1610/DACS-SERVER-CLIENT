@@ -29,6 +29,22 @@ public class Model_User_Account {
 		this.status = status;
 	}
 	
+    public Model_User_Account(Object json) {
+        JSONObject obj = (JSONObject) json;
+        try {
+            user_Id = obj.getInt("user_Id");
+            userName = obj.getString("userName");
+            fullName = obj.getString("fullName");
+            email = obj.getString("email");
+            phone = obj.getString("phone");
+            address = obj.getString("address");
+            avatar_path = obj.getString("avatar_path");
+//            status = obj.getBoolean("status");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+	
     public JSONObject toJsonObject(String type) {
     	try {
 			JSONObject json = new JSONObject();

@@ -187,14 +187,13 @@ public class P_Register extends javax.swing.JPanel {
         	lbError.setText(model_Message.getMessage());
         	lbError.setForeground(Color.green);
             
-            
-//        	Panel_Register register = new Panel_Register();
-//        	JDialog dialog = new JDialog();
-//    		dialog.setLayout(new GridLayout(1,1));
-//    		dialog.setSize(1400, 620);
-//    		dialog.setLocationRelativeTo(null);
-//        	dialog.add(register);
-//        	dialog.setVisible(true);
+        	JDialog dialog = new JDialog();
+        	Panel_Register register = new Panel_Register(dialog, txtUser.getText());
+    		dialog.setLayout(new GridLayout(1,1));
+    		dialog.setSize(1400, 620);
+    		dialog.setLocationRelativeTo(null);
+        	dialog.add(register);
+        	dialog.setVisible(true);
         }
     }
 

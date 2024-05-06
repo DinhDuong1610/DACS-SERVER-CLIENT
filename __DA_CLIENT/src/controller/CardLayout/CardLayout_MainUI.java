@@ -27,6 +27,8 @@ public class CardLayout_MainUI implements ActionListener{
 		}
 		else if(e.getSource() == main.getButton_calender()) {
 			main.getCardLayout_MainUI().show(main.getPanel_card(), "panel_card_calender");
+    		main.getCalendarUI().removeAllItems();
+			Service.getInstance().listCalendar();
 		}
 		else if(e.getSource() == main.getButton_user()) {
 			main.getCardLayout_MainUI().show(main.getPanel_card(), "panel_card_user");

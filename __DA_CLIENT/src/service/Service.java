@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import model.Chat.Model_Message;
 import model.Chat.Model_Receive_Message;
 import model.Chat.Model_User_Account;
+import model.calendar.Model_Calendar;
 import model.community.Model_Post;
 import model.community.Model_Project;
 import view.MainUI;
@@ -23,7 +24,7 @@ import view.ChatUI.form.Login;
 public class Service {
 	private static Service instance;
 	private Socket client;
-	private final int PORT_NUMBER = 1610;
+	private final int PORT_NUMBER = 2701;
 	private final String IP = "localhost";
 	private Model_User_Account user;
 	BufferedReader in;
@@ -107,6 +108,10 @@ public class Service {
                 Model_Receive_Message message = new Model_Receive_Message(jsonData);
                 PublicEvent.getInstance().getEventChat().receiveMessage(message);
 	    	}
+	    	else if(jsonData.getString("type").equals("historyMessage")) {
+                String history = jsonData.getString("history");
+                main.getHome().getChat().getChatBody().loadHistory(history);
+	    	}
 	    	else if(jsonData.getString("type").equals("addProject")) {
 	    		Model_Project project = new Model_Project(jsonData);
 	    		main.getHome_community().getMenuLeft().addProject(project);
@@ -131,6 +136,11 @@ public class Service {
 	    		Model_User_Account user = new Model_User_Account(jsonData);
 	    		main.getHome_community().getBody().getMember().addMember(user);
 	    	}
+	    	else if(jsonData.getString("type").equals("listCalendar")) {
+	    		Model_Calendar item = new Model_Calendar(jsonData);
+	    		main.getCalendarUI().addCalendarFromServer(item);
+	    	}
+
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -158,10 +168,50 @@ public class Service {
         }).start();  
     }
     
+    public synchronized void registerInfo(JSONObject jsonData) {
+        new Thread(() -> {
+            try {
+    			out.writeBytes(jsonData.toString() + "\n");
+    			out.flush();
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+        }).start();  
+    }
+    
+    public synchronized void updateInfo(JSONObject jsonData) {
+        new Thread(() -> {
+            try {
+    			out.writeBytes(jsonData.toString() + "\n");
+    			out.flush();
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+        }).start();  
+    }
+    
     public synchronized void sendMessage(JSONObject jsonData) {
         new Thread(() -> {
             try {
     			out.writeBytes(jsonData.toString() + "\n");
+    			out.flush();
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+        }).start(); 
+    }
+    
+    public synchronized void historyMessage(int user_Id2) {
+    	JSONObject json = new JSONObject();
+		try {
+			json.put("type", "historyMessage");
+			json.put("user_Id2", user_Id2);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        new Thread(() -> {
+            try {
+    			out.writeBytes(json.toString() + "\n");
     			out.flush();
     		} catch (IOException e) {
     			e.printStackTrace();
@@ -264,6 +314,40 @@ public class Service {
     		}
         }).start(); 
     }
+    
+    public synchronized void addCalendar(JSONObject jsonData) {
+    	try {
+			jsonData.put("type", "addCalendar");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+        new Thread(() -> {
+            try {
+    			out.writeBytes(jsonData.toString() + "\n");
+    			out.flush();
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+        }).start(); 
+    }
+    
+    public synchronized void listCalendar() {
+    	JSONObject json = new JSONObject();
+		try {
+			json.put("type", "listCalendar");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        new Thread(() -> {
+            try {
+    			out.writeBytes(json.toString() + "\n");
+    			out.flush();
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+        }).start(); 
+    }    
+    
 	
     public Socket getClient() {
         return client;

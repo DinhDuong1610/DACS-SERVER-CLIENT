@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.*;
 
+import model.ImageDecoder;
 import model.Chat.Model_User_Account;
 import view.ChatUI.event.PublicEvent;
 import view.ChatUI.swing.ImageAvatar;
@@ -51,8 +52,8 @@ public class Item_People extends JPanel {
         lb = new JLabel();
 
         imageAvatar1.setBorderSize(0);
-        imageAvatar1.setImage(new ImageIcon(getClass().getResource("/images/testing/avatar.png")));
-
+//        imageAvatar1.setImage(new ImageIcon(getClass().getResource("/images/testing/avatar.png")));
+        imageAvatar1.setImage(ImageDecoder.decodeStringToImageIcon(user.getAvatar_path()));
         lb.setFont(new java.awt.Font("sansserif", Font.BOLD, 18)); // NOI18N
         lb.setText("Name");
         setBackground(new Color(255, 255, 255));

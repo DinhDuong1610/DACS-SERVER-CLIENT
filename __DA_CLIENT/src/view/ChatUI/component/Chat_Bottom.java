@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.*;
 
@@ -64,7 +66,11 @@ public class Chat_Bottom extends JPanel{
             public void actionPerformed(ActionEvent ae) {
                 String text = txt.getText().trim();
                 if (!text.equals("")) {
-                    Model_Send_Message message = new Model_Send_Message(Service.getInstance().getUser().getUser_Id(), user.getUser_Id(), text);
+                    Date currentTime = new Date();
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd/MM");
+                    String formattedTime = dateFormat.format(currentTime);
+                	
+                    Model_Send_Message message = new Model_Send_Message(Service.getInstance().getUser().getUser_Id(), user.getUser_Id(), text, formattedTime);
                     send(message);
                     PublicEvent.getInstance().getEventChat().sendMessage(message);
                     txt.setText("");

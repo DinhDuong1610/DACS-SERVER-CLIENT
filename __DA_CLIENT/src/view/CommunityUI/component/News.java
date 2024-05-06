@@ -6,6 +6,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
+import model.Chat.Model_User_Account;
 import model.community.Model_Post;
 import model.community.Model_Project;
 import net.miginfocom.swing.MigLayout;
@@ -14,6 +15,8 @@ import java.awt.CardLayout;
 
 public class News extends JPanel{
 	private Model_Project project;
+	private Model_User_Account user;
+	
 	public News(Model_Project project) {
 		this.project = project;
 		
@@ -38,12 +41,20 @@ public class News extends JPanel{
 	}
 	
 	public void post(Model_Post post) {
-		this.add(new Item_post(post), "wrap");
+		this.add(new Item_post(user, post), "wrap");
     	repaint();
     	revalidate();
 	}
-	
 
+	public Model_User_Account getUser() {
+		return user;
+	}
+
+	public void setUser(Model_User_Account user) {
+		this.user = user;
+	}
+	
+	
 	
 	
 }

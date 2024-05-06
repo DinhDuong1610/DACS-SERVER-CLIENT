@@ -44,6 +44,25 @@ public class Model_User_Account {
             e.printStackTrace();
         }
     }
+    
+    public JSONObject toJsonObject(String type) {
+    	try {
+			JSONObject json = new JSONObject();
+			json.put("type", type);
+			json.put("user_Id", user_Id);
+			json.put("userName", userName);
+			json.put("fullName", fullName);
+			json.put("email", email);
+			json.put("phone", phone);
+			json.put("address", address);
+			json.put("avatar_path", avatar_path);
+//			json.put("status", true);
+			return json;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+    }
 	
     
     

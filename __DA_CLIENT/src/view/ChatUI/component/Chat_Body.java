@@ -13,11 +13,14 @@ import javax.swing.SwingUtilities;
 
 import model.Chat.Model_Receive_Message;
 import model.Chat.Model_Send_Message;
+import model.Chat.Model_User_Account;
 import net.miginfocom.swing.MigLayout;
+import service.Service;
 
 public class Chat_Body extends javax.swing.JPanel {
     private JPanel body;
     private JScrollPane sp;
+    private Model_User_Account user;
 	
     public Chat_Body() {
     	sp = new JScrollPane();
@@ -84,41 +87,66 @@ public class Chat_Body extends javax.swing.JPanel {
 //        updateScroll();
 //    }
     
+    public void loadHistory(String history) {
+    	System.out.println("loadHistory : \n" + history);
+        String[] lines = history.split("\n");
+        for (String line : lines) {
+            String[] parts = line.split("\\|");
+            if (parts.length == 4) {
+                int fromUserID = Integer.parseInt(parts[0]);
+                String text = parts[1];
+                int toUserID = Integer.parseInt(parts[2]);
+                String time = parts[3];
+                
+                if(fromUserID == Service.getInstance().getUser().getUser_Id()) {
+                	Model_Send_Message data = new Model_Send_Message(fromUserID, toUserID, text, time);
+                	addItemRight(data);
+                }
+                else {
+                	Model_Receive_Message data = new Model_Receive_Message(fromUserID, text, time);
+                	addItemLeft(data);
+                }
+            } else {
+                System.out.println("Dòng không hợp lệ: " + line);
+            }
+        }
+    }
+    
     public void addItemLeft(Model_Receive_Message data) {
-        Chat_Left item = new Chat_Left();
+//        Chat_Left item = new Chat_Left();
+    	Chat_Left_With_Profile item = new Chat_Left_With_Profile(user);
         item.setText(data.getText());
-        item.setTime();
+        item.setTime(data.getTime());
         body.add(item, "wrap, w 100::80%");
         repaint();
         revalidate();
-        updateScroll();
-        
+        updateScroll();  
     }
     
-    public void addItemFile(String text, String user, String fileName, String fileSize) {
-        Chat_Left_With_Profile item = new Chat_Left_With_Profile();
-        item.setText(text);
-        item.setFile(fileName, fileSize);
-        item.setTime();
-        item.setUserProfile(user);
-        body.add(item, "wrap, w 100::80%");
-        //  ::80% set max with 80%
-        body.repaint();
-        body.revalidate();
-        updateScroll();
-    }
+//    public void addItemFile(String text, String user, String fileName, String fileSize) {
+//        Chat_Left_With_Profile item = new Chat_Left_With_Profile();
+//        item.setText(text);
+//        item.setFile(fileName, fileSize);
+//        item.setTime();
+//        item.setUserProfile(user);
+//        body.add(item, "wrap, w 100::80%");
+//        //  ::80% set max with 80%
+//        body.repaint();
+//        body.revalidate();
+//        updateScroll();
+//    }
     
-    public void addItemFileRight(String text, String fileName, String fileSize) {
-        Chat_Right item = new Chat_Right();
-        item.setText(text);
-        item.setFile(fileName, fileSize);
-        item.setTime();
-        body.add(item, "wrap, al right, w 100::80%");
-        //  ::80% set max with 80%
-        body.repaint();
-        body.revalidate();
-        updateScroll();
-    }
+//    public void addItemFileRight(String text, String fileName, String fileSize) {
+//        Chat_Right item = new Chat_Right();
+//        item.setText(text);
+//        item.setFile(fileName, fileSize);
+//        item.setTime();
+//        body.add(item, "wrap, al right, w 100::80%");
+//        //  ::80% set max with 80%
+//        body.repaint();
+//        body.revalidate();
+//        updateScroll();
+//    }
     
 //    public void addItemRight(String text, Icon... image) {
 //        Chat_Right item = new Chat_Right();
@@ -138,7 +166,7 @@ public class Chat_Body extends javax.swing.JPanel {
         body.add(item, "wrap, al right, w 100::80%");
         repaint();
         revalidate();
-        item.setTime();
+        item.setTime(data.getTime());
         updateScroll();
 //        scrollToBottom();
     }
@@ -163,5 +191,13 @@ public class Chat_Body extends javax.swing.JPanel {
             JScrollBar verticalScrollBar = sp.getVerticalScrollBar();
             verticalScrollBar.setValue(verticalScrollBar.getMaximum());
         });
+    }
+    
+    public Model_User_Account getUser() {
+        return user;
+    }
+
+    public void setUser(Model_User_Account user) {
+        this.user = user;
     }
 }

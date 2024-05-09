@@ -24,7 +24,7 @@ import view.ChatUI.form.Login;
 public class Service {
 	private static Service instance;
 	private Socket client;
-	private final int PORT_NUMBER = 2701;
+	private final int PORT_NUMBER = 1610;
 	private final String IP = "localhost";
 	private Model_User_Account user;
 	BufferedReader in;
@@ -61,7 +61,7 @@ public class Service {
                 try {
                     String message = in.readLine();
                     if (message != null) {
-                        System.out.println("client: " + message + "\n");
+//                        System.out.println("client: " + message + "\n");
                         listen(message);
                     } else {
                         System.out.println("Client disconnected");
@@ -74,11 +74,12 @@ public class Service {
         }).start();
     }
     
-    public void listen(String data) {
+    public void listen(String newdata) {
     	JSONObject jsonData;
+    	String data=new String(newdata);
 		try {
 			jsonData = new JSONObject(data);
-//			System.out.println(jsonData.toString());
+			System.out.println("server: " + jsonData.toString() + "\n");
 	    	if(jsonData.getString("type").equals("register")) {
 	            String message = jsonData.getString("message");
 	            boolean action = jsonData.getBoolean("action");
@@ -146,7 +147,7 @@ public class Service {
 		}
     }
 
-    public synchronized void sendLogin(JSONObject jsonData) {
+    public void sendLogin(JSONObject jsonData) {
         new Thread(() -> {
             try {
     			out.writeBytes(jsonData.toString() + "\n");
@@ -157,7 +158,7 @@ public class Service {
         }).start();
     }
     
-    public synchronized void sendRegister(JSONObject jsonData) {
+    public void sendRegister(JSONObject jsonData) {
         new Thread(() -> {
             try {
     			out.writeBytes(jsonData.toString() + "\n");
@@ -168,7 +169,7 @@ public class Service {
         }).start();  
     }
     
-    public synchronized void registerInfo(JSONObject jsonData) {
+    public void registerInfo(JSONObject jsonData) {
         new Thread(() -> {
             try {
     			out.writeBytes(jsonData.toString() + "\n");
@@ -179,7 +180,7 @@ public class Service {
         }).start();  
     }
     
-    public synchronized void updateInfo(JSONObject jsonData) {
+    public void updateInfo(JSONObject jsonData) {
         new Thread(() -> {
             try {
     			out.writeBytes(jsonData.toString() + "\n");
@@ -190,7 +191,7 @@ public class Service {
         }).start();  
     }
     
-    public synchronized void sendMessage(JSONObject jsonData) {
+    public void sendMessage(JSONObject jsonData) {
         new Thread(() -> {
             try {
     			out.writeBytes(jsonData.toString() + "\n");
@@ -201,7 +202,7 @@ public class Service {
         }).start(); 
     }
     
-    public synchronized void historyMessage(int user_Id2) {
+    public void historyMessage(int user_Id2) {
     	JSONObject json = new JSONObject();
 		try {
 			json.put("type", "historyMessage");
@@ -219,7 +220,7 @@ public class Service {
         }).start(); 
     }
     
-    public synchronized void addProject(JSONObject jsonData) {
+    public void addProject(JSONObject jsonData) {
         new Thread(() -> {
             try {
     			out.writeBytes(jsonData.toString() + "\n");
@@ -230,7 +231,7 @@ public class Service {
         }).start(); 
     }
     
-    public synchronized void listProject() {
+    public void listProject() {
     	JSONObject json = new JSONObject();
 		try {
 			json.put("type", "listProject");
@@ -247,7 +248,7 @@ public class Service {
         }).start(); 
     }
     
-    public synchronized void listPost(int projectId) {
+    public void listPost(int projectId) {
     	JSONObject json = new JSONObject();
 		try {
 			json.put("type", "listPost");
@@ -266,7 +267,7 @@ public class Service {
     }
 
     
-    public synchronized void listMember(int projectId) {
+    public void listMember(int projectId) {
     	JSONObject json = new JSONObject();
 		try {
 			json.put("type", "listMember");
@@ -285,7 +286,7 @@ public class Service {
     }
     
     
-    public synchronized void postNews(JSONObject jsonData) {
+    public void postNews(JSONObject jsonData) {
         new Thread(() -> {
             try {
     			out.writeBytes(jsonData.toString() + "\n");
@@ -296,7 +297,7 @@ public class Service {
         }).start(); 
     }
     
-    public synchronized void addMember(String userName, int projectId) {
+    public void addMember(String userName, int projectId) {
     	JSONObject json = new JSONObject();
 		try {
 			json.put("type", "addMember");
@@ -315,7 +316,7 @@ public class Service {
         }).start(); 
     }
     
-    public synchronized void addCalendar(JSONObject jsonData) {
+    public void addCalendar(JSONObject jsonData) {
     	try {
 			jsonData.put("type", "addCalendar");
 		} catch (JSONException e) {
@@ -331,7 +332,7 @@ public class Service {
         }).start(); 
     }
     
-    public synchronized void listCalendar() {
+    public void listCalendar() {
     	JSONObject json = new JSONObject();
 		try {
 			json.put("type", "listCalendar");

@@ -1,6 +1,8 @@
 package service;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
@@ -27,7 +29,7 @@ public class Service {
     private static Service instance;
     private ServerSocket serverSocket;
     private JTextArea textArea;
-    private final int PORT_NUMBER = 2701;
+    private final int PORT_NUMBER = 1610;
 	private ServiceUser serviceUser;
 	private ServiceCommunity serviceCommunity;
 	private ServiceCalendar serviceCalendar;
@@ -73,14 +75,15 @@ public class Service {
         }).start();
     }
     
-    public void listen(ClientHandler client, String data) {
+    public void listen(ClientHandler client, String newdata) {
 		serviceCommunity = new ServiceCommunity(Integer.parseInt(client.getUserId()));
     	serviceCalendar = new ServiceCalendar(Integer.parseInt(client.getUserId()));
 		serviceMessage = new ServiceMessage(Integer.parseInt(client.getUserId()));
-    	new Thread(()->{
+    	String data=new String(newdata);
+		new Thread(()->{
     		try {
     			JSONObject jsonData = new JSONObject(data);
-	            textArea.append("OO: " + jsonData);
+	            textArea.append("listen: " + jsonData + "\n");
     	    	if(jsonData.getString("type").equals("register")) {
     	            String userName = jsonData.getString("userName");
     	            String password = jsonData.getString("password");
@@ -214,7 +217,7 @@ public class Service {
     	}).start();
     }
     
-    public synchronized void broadcast(String userId, JSONObject jsonData) {
+    public void broadcast(String userId, JSONObject jsonData) {
 //    	new Thread(()-> {
             for (ClientHandler client : clients) {
                 if(client.getUserId().equals(userId)) {
@@ -224,7 +227,7 @@ public class Service {
 //    	}).start();
     }
     
-    public synchronized void broadcastHistory(String userId, String history) {
+    public void broadcastHistory(String userId, String history) {
     	JSONObject json = new JSONObject();
 		try {
 			json.put("type", "historyMessage");
@@ -241,7 +244,7 @@ public class Service {
 //    	}).start();
     }
     
-    public synchronized void broadcastMessage(String userId, JSONObject jsonData) {
+    public void broadcastMessage(String userId, JSONObject jsonData) {
 //    	new Thread(()-> {
             for (ClientHandler client : clients) {
                 if(client.getUserId().equals(userId)) {
@@ -251,7 +254,7 @@ public class Service {
 //    	}).start();
     }
 	
-    public synchronized void broadcastCommunity(int projectId, JSONObject jsonData) {
+    public void broadcastCommunity(int projectId, JSONObject jsonData) {
     	List<Model_User_Account> list = new ServiceCommunity(1).getMember(projectId);
 //    	new Thread(()-> {
             for (ClientHandler client : clients) {
@@ -264,5 +267,6 @@ public class Service {
             }
 //    	}).start();
     }
+    
 	
 }

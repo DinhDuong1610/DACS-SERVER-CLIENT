@@ -44,7 +44,7 @@ public class ClientHandler extends Thread{
                 if (message == null) { // Client disconnected
                     break;
                 }
-                System.out.println("server: " + message);
+//                System.out.println("server: " + message);
                 service.listen(this, message);
 //                broadcast(message);
             } catch (Exception e) {

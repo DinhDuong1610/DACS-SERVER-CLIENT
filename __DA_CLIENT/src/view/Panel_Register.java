@@ -12,6 +12,8 @@ import model.Chat.Model_User_Account;
 import service.Service;
 
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.awt.event.ActionEvent;
 
 public class Panel_Register extends JPanel{
@@ -129,6 +131,7 @@ public class Panel_Register extends JPanel{
 		bt_save = new JButton("SAVE");
 		bt_save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 				Model_User_Account user = new Model_User_Account(999, tf_user_TenTaiKhoan.getText(), tf_user_HoVaTen.getText(), tf_user_email.getText(), tf_user_sdt.getText(), ta_DiaChi.getText(), imagePath, true);
 				Service.getInstance().registerInfo(user.toJsonObject("registerInfo"));
 				dialog.dispose();
@@ -138,6 +141,7 @@ public class Panel_Register extends JPanel{
 		bt_save.setBounds(596, 487, 167, 51);
 		add(bt_save);
 	}
+	
 
 	public JTextField getTf_user_TenTaiKhoan() {
 		return tf_user_TenTaiKhoan;

@@ -69,8 +69,9 @@ public class Item_post extends JPanel{
 //		JLabel lb_avatar = new JLabel("");
 		imageAvatar = new ImageAvatar();
 		imageAvatar.setBorderSize(0);
-		imageAvatar.setImage(new ImageIcon(getClass().getResource("/images/testing/avatar.png")));
-//		imageAvatar.setImage(ImageDecoder.decodeStringToImageIcon(user.getAvatar_path()));
+//		imageAvatar.setImage(new ImageIcon(getClass().getResource("/images/testing/avatar.png")));
+		imageAvatar.setImage(ImageDecoder.decodeStringToImageIcon(post.getAvatarPath()));
+
 		
 		JLabel lb_userName = new JLabel(post.getUserName());
 		lb_userName.setFont(new Font("Tahoma", Font.BOLD, 22));

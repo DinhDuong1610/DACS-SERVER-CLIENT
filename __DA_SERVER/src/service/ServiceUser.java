@@ -1,5 +1,9 @@
 package service;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -98,9 +102,10 @@ public class ServiceUser {
           p.setString(4, data.getEmail());
           p.setString(5, data.getPhone());
           p.setString(6, data.getAddress());
-          p.setString(7, data.getAvatar_path());
+          p.setString(7, data.getUserName());
           p.execute();
           p.close();
+          writeFile(data.getUserName() + "|" + data.getAvatar_path(), true);
         } catch (SQLException e) {
         	e.printStackTrace();
         }
@@ -113,11 +118,31 @@ public class ServiceUser {
           p.setString(2, data.getEmail());
           p.setString(3, data.getPhone());
           p.setString(4, data.getAddress());
-          p.setString(5, data.getAvatar_path());
+          p.setString(5, data.getUserName());
           p.setInt(6, user_Id);
           p.execute();
           p.close();
-        } catch (SQLException e) {
+        	
+          StringBuilder ans = new StringBuilder("");
+            try {
+                FileReader fr = new FileReader("src/connection/DataImage");
+                BufferedReader br = new BufferedReader(fr);
+                String line;
+                while ((line = br.readLine()) != null) {
+                	String[] str = line.split("\\|");
+                	String userName = str[0];
+                	String pathImage = str[1];
+                    if(!userName.equals(data.getUserName())) {
+                    	ans.append(line + "\n");
+                    }
+                }
+                br.close();
+            } catch (Exception e) {
+                System.err.println("Đã xảy ra lỗi khi đọc tập tin: " + e.getMessage());
+            }
+            ans.append(data.getUserName() + "|" + data.getAvatar_path() + "\n");
+        	writeFile(ans.toString(), false);
+        } catch (Exception e) {
         	e.printStackTrace();
         }
     }
@@ -167,7 +192,7 @@ public class ServiceUser {
                     String email = r.getString(4);
                     String phone = r.getString(5);
                     String address = r.getString(6);
-                    String avatar_path = r.getString(7);
+                    String avatar_path = readFile(r.getString(7));
                     data = new Model_User_Account(userID, userName, fullName, email, phone, address, avatar_path, true);
                     return data;
                 }
@@ -196,7 +221,7 @@ public class ServiceUser {
                 String email = r.getString(4);
                 String phone = r.getString(5);
                 String address = r.getString(6);
-                String avatar_path = r.getString(7);
+                String avatar_path = readFile(r.getString(7));
                 list.add(new Model_User_Account(userID, userName, fullName, email, phone, address, avatar_path, true));
             }
             r.close();
@@ -226,4 +251,35 @@ public class ServiceUser {
 		}
     	return check;
     }
+    
+	public void writeFile(String data, boolean append) {
+        try {
+            FileWriter fw = new FileWriter("src/connection/DataImage", append);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(data);
+            bw.close();
+        } catch (Exception e) {
+        	e.printStackTrace();
+        }
+	}
+	
+	public String readFile(String user) {
+        try {
+            FileReader fr = new FileReader("src/connection/DataImage");
+            BufferedReader br = new BufferedReader(fr);
+            String line;
+            while ((line = br.readLine()) != null) {
+            	String[] str = line.split("\\|");
+            	String userName = str[0];
+            	String pathImage = str[1];
+                if(userName.equals(user)) {
+                	return pathImage;
+                }
+            }
+            br.close();
+        } catch (Exception e) {
+            System.err.println("Đã xảy ra lỗi khi đọc tập tin: " + e.getMessage());
+        }
+        return null;
+	}
 }

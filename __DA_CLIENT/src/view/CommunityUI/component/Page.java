@@ -76,12 +76,13 @@ public class Page extends JPanel{
 	
 	public void postNewPost() {
 		String userName = Service.getInstance().getUser().getUserName();
+		String avatarPath = Service.getInstance().getUser().getAvatar_path();
 		String content = startNewPost.getTextArea().getText();
 	
         Date currentTime = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd-MM-yyyy");
         String timing = dateFormat.format(currentTime);
-        Model_Post post = new Model_Post(0, project.getProjectId(), userName, timing, content);
+        Model_Post post = new Model_Post(0, project.getProjectId(), userName, avatarPath , timing, content);
         Service.getInstance().postNews(post.toJsonObject());
 //		news.post(post); 
         updateScroll();

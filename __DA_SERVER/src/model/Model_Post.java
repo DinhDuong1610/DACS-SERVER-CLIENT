@@ -6,23 +6,26 @@ public class Model_Post {
 	private int postId;
 	private int projectId;
 	private String userName;
+	private String avatarPath;
 	private String  timing;
 	private String content;
 	
-	public Model_Post(int postId, int projectId, String userName, String timing, String content) {
+    public Model_Post(int postId, int projectId, String userName, String avatarPath, String timing, String content) {
 		this.postId = postId;
 		this.projectId = projectId;
 		this.userName = userName;
+		this.avatarPath = avatarPath;
 		this.timing = timing;
 		this.content = content;
 	}
-	
-    public Model_Post(Object json) {
+
+	public Model_Post(Object json) {
         JSONObject obj = (JSONObject) json;
         try {
         	postId = obj.getInt("postId");
         	projectId = obj.getInt("projectId");
         	userName = obj.getString("userName");
+        	avatarPath = obj.getString("avatarPath");
         	timing = obj.getString("timing");
         	content = obj.getString("content");
         } catch (Exception e) {
@@ -37,6 +40,7 @@ public class Model_Post {
 			json.put("postId", postId);
 			json.put("projectId", projectId);
 			json.put("userName", userName);
+			json.put("avatarPath", avatarPath);
 			json.put("timing", timing);
 			json.put("content", content);
 			return json;
@@ -89,6 +93,14 @@ public class Model_Post {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public String getAvatarPath() {
+		return avatarPath;
+	}
+
+	public void setAvatarPath(String avatarPath) {
+		this.avatarPath = avatarPath;
 	}
 	
 	

@@ -255,24 +255,28 @@ public class MainUI extends JFrame {
 		panel_card_user_view.add(label_user_DiaChi);
 		
 		tf_user_TenTaiKhoan = new JTextField();
+		tf_user_TenTaiKhoan.setEditable(false);
 		tf_user_TenTaiKhoan.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		tf_user_TenTaiKhoan.setColumns(10);
 		tf_user_TenTaiKhoan.setBounds(745, 87, 640, 48);
 		panel_card_user_view.add(tf_user_TenTaiKhoan);
 		
 		tf_user_HoVaTen = new JTextField();
+		tf_user_HoVaTen.setEditable(false);
 		tf_user_HoVaTen.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		tf_user_HoVaTen.setColumns(10);
 		tf_user_HoVaTen.setBounds(745, 145, 640, 48);
 		panel_card_user_view.add(tf_user_HoVaTen);
 		
 		tf_user_email = new JTextField();
+		tf_user_email.setEditable(false);
 		tf_user_email.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		tf_user_email.setColumns(10);
 		tf_user_email.setBounds(745, 203, 640, 48);
 		panel_card_user_view.add(tf_user_email);
 		
 		tf_user_sdt = new JTextField();
+		tf_user_sdt.setEditable(false);
 		tf_user_sdt.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		tf_user_sdt.setColumns(10);
 		tf_user_sdt.setBounds(745, 261, 640, 48);
@@ -283,6 +287,7 @@ public class MainUI extends JFrame {
 		panel_card_user_view.add(scrollPane);
 		
 		ta_DiaChi = new JTextArea();
+		ta_DiaChi.setEditable(false);
 		ta_DiaChi.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		ta_DiaChi.setLineWrap(true);
 		ta_DiaChi.setWrapStyleWord(true);
@@ -344,6 +349,7 @@ public class MainUI extends JFrame {
 		panel_card_user_edit.add(label_user_DiaChi_1);
 		
 		tf_user_TenTaiKhoan_edit = new JTextField();
+		tf_user_TenTaiKhoan_edit.setEditable(false);
 		tf_user_TenTaiKhoan_edit.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		tf_user_TenTaiKhoan_edit.setColumns(10);
 		tf_user_TenTaiKhoan_edit.setBounds(745, 87, 640, 48);
@@ -444,7 +450,7 @@ public class MainUI extends JFrame {
 		bt_user_edit_save = new JButton("LƯU THAY ĐỔI");
 		bt_user_edit_save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Model_User_Account account = new Model_User_Account(999, tf_user_TenTaiKhoan_edit.getText(), tf_user_HoVaTen_edit.getText(), tf_user_email_edit.getText(), tf_user_sdt_edit.getText(), ta_DiaChi_edit.getText(), user.getAvatar_path(), true);
+				Model_User_Account account = new Model_User_Account(999, tf_user_TenTaiKhoan_edit.getText(), tf_user_HoVaTen_edit.getText(), tf_user_email_edit.getText(), tf_user_sdt_edit.getText(), ta_DiaChi_edit.getText(), imagePath, true);
 				Service.getInstance().updateInfo(account.toJsonObject("updateInfo"));
 				editUser();
 			}
@@ -588,6 +594,7 @@ public class MainUI extends JFrame {
 		ta_DiaChi.setText(account.getAddress());
 		lb_tenTaiKhoan.setText(account.getUserName());
 		if(!account.getAvatar_path().isEmpty()) {
+			
 			imagePath = account.getAvatar_path();
 			label_user_avatar.setIcon(new ImageIcon(ImageDecoder.decodeStringToImageIcon(user.getAvatar_path()).getImage().getScaledInstance(label_user_avatar.getWidth(), label_user_avatar.getHeight(), Image.SCALE_SMOOTH)));
 		}

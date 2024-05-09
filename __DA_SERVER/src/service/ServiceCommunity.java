@@ -18,8 +18,8 @@ public class ServiceCommunity {
     private final String INSERT_PROJECT = "INSERT INTO project (projectName) VALUES (?)";
     private final String INSERT_COMMUNITY = "INSERT INTO community_contact (projectId, user_Id) VALUES (?, ?)";
     private final String SELECT_PROJECT = "SELECT project.projectId, project.projectName FROM project JOIN community_contact ON project.projectId = community_contact.projectId WHERE community_contact.user_Id=?";
-    private final String INSERT_POST = "INSERT INTO post (projectId, userName, timing, content) VALUES (?, ?, ?, ?)";
-    private final String SELECT_POST = "SELECT postId, projectId, userName, timing, content FROM post WHERE projectId=?";
+    private final String INSERT_POST = "INSERT INTO post (projectId, userName, avatarPath, timing, content) VALUES (?, ?, ?, ?, ?)";
+    private final String SELECT_POST = "SELECT postId, projectId, userName, avatarPath, timing, content FROM post WHERE projectId=?";
     private final String SELECT_MEMBER = "select user_account.User_ID, UserName,fullName, Email, Phone, Address, Avatar_path FROM user_account JOIN community_contact ON user_account.User_Id=community_contact.user_Id WHERE projectId=?";
     private final String SELECT_USER = "select User_ID, UserName,fullName, Email, Phone, Address, Avatar_path from user_account where userName=?";
     
@@ -58,8 +58,9 @@ public class ServiceCommunity {
     		PreparedStatement p = con.prepareStatement(INSERT_POST, PreparedStatement.RETURN_GENERATED_KEYS);
             p.setInt(1, post.getProjectId());
             p.setString(2, post.getUserName());
-            p.setString(3, post.getTiming());
-            p.setString(4, post.getContent());
+            p.setString(3, post.getAvatarPath());
+            p.setString(4, post.getTiming());
+            p.setString(5, post.getContent());
             p.execute();
             ResultSet r = p.getGeneratedKeys();
             r.first();
@@ -103,9 +104,10 @@ public class ServiceCommunity {
             	int postId = r.getInt(1);
             	int proId = r.getInt(2);
             	String userName = r.getString(3);
-            	String timing = r.getString(4);
-            	String content = r.getString(5);
-            	Model_Post post = new Model_Post(postId, proId, userName, timing, content);
+            	String avatarPath = r.getString(4);
+            	String timing = r.getString(5);
+            	String content = r.getString(6);
+            	Model_Post post = new Model_Post(postId, proId, userName, avatarPath, timing, content);
             	list.add(post);
             }
             r.close();

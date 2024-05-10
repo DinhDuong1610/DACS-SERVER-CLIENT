@@ -332,6 +332,22 @@ public class Service {
         }).start(); 
     }
     
+    public void updateCalendar(JSONObject jsonData) {
+    	try {
+			jsonData.put("type", "updateCalendar");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+        new Thread(() -> {
+            try {
+    			out.writeBytes(jsonData.toString() + "\n");
+    			out.flush();
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+        }).start(); 
+    }
+    
     public void listCalendar() {
     	JSONObject json = new JSONObject();
 		try {

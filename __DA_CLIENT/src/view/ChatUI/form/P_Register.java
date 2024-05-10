@@ -8,6 +8,7 @@ import view.ChatUI.event.PublicEvent;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
+import model.MD5;
 import model.Chat.Model_Message;
 import model.Chat.Model_Register;
 import service.Service;
@@ -172,7 +173,7 @@ public class P_Register extends javax.swing.JPanel {
         } else if (!password.equals(confirmPassword)) {
         	txtRePassword.grabFocus();
         } else {
-            Model_Register data = new Model_Register(userName, password);
+            Model_Register data = new Model_Register(userName, MD5.getMd5(password));
             Service.getInstance().sendRegister(data.toJsonObject());
         }
     }

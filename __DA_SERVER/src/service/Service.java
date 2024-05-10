@@ -109,19 +109,22 @@ public class Service {
     	            Model_Login login = new Model_Login(userName, password);
     	            Model_Message message = serviceUser.login(login);
     	            broadcast(client.getUserId(), message.toJsonObject("login"));
-    	            Model_User_Account account = serviceUser.loadLogin();
-    	            broadcast(client.getUserId(), account.toJsonObject("loadLogin"));
     	            
-    	            List<Model_User_Account> list = serviceUser.getUser();
-    	            if(list.size() == 0) textArea.append("rong!!!!");
-    	            for(Model_User_Account user : list) {    	    
-//    	            	if(serviceUser.checkContact(user.getUser_Id())) {
-    	            		broadcast(client.getUserId(), user.toJsonObject("list_user"));
-//    	            	}
-//    	            	textArea.append("list user :" +  user.toJsonObject("list_user") + "\n");
+    	            if(message.isAction()) {
+        	            Model_User_Account account = serviceUser.loadLogin();
+        	            broadcast(client.getUserId(), account.toJsonObject("loadLogin"));
+        	            
+        	            List<Model_User_Account> list = serviceUser.getUser();
+        	            if(list.size() == 0) textArea.append("rong!!!!");
+        	            for(Model_User_Account user : list) {    	    
+//        	            	if(serviceUser.checkContact(user.getUser_Id())) {
+        	            		broadcast(client.getUserId(), user.toJsonObject("list_user"));
+//        	            	}
+//        	            	textArea.append("list user :" +  user.toJsonObject("list_user") + "\n");
+        	            }
+        	            client.setUserId(account.getUser_Id()+"");
+        	            textArea.append("check Login :" + message.isAction() + "message:" + message.getMessage() );
     	            }
-    	            client.setUserId(account.getUser_Id()+"");
-    	            textArea.append("check Login :" + message.isAction() + "message:" + message.getMessage() );
     	            
     	    	}
     			else if(jsonData.getString("type").equals("sendMessage")) {

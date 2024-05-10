@@ -58,7 +58,7 @@ public class Chat_Title extends JPanel{
 	
     public void setUserName(Model_User_Account user) {
         this.user = user;
-        lbName.setText(user.getUserName());
+        lbName.setText(user.getFullName());
 //        if (user.isStatus()) {
 //            statusActive();
 //        } else {
@@ -68,7 +68,7 @@ public class Chat_Title extends JPanel{
 
     public void updateUser(Model_User_Account user) {
         if (this.user == user) {
-            lbName.setText(user.getUserName());
+            lbName.setText(user.getFullName());
 //            if (user.isStatus()) {
 //                statusActive();
 //            } else {

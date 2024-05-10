@@ -20,7 +20,7 @@ public class Item_People extends JPanel {
     public Item_People(Model_User_Account user) {
     	this.user = user;
         initComponents();
-        lb.setText(user.getUserName());
+        lb.setText(user.getFullName());
         init();
     }
     

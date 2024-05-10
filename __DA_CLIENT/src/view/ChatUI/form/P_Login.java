@@ -6,6 +6,7 @@ import view.ChatUI.event.PublicEvent;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
+import model.MD5;
 import model.Chat.Model_Login;
 import model.Chat.Model_Message;
 import model.Chat.Model_Register;
@@ -137,7 +138,7 @@ public class P_Login extends JPanel{
         } else if (password.equals("")) {
             txtPass.grabFocus();
         } else {
-            Model_Login data = new Model_Login(userName, password);
+            Model_Login data = new Model_Login(userName, MD5.getMd5(password));
             Service.getInstance().sendLogin(data.toJsonObject());
         }
     }

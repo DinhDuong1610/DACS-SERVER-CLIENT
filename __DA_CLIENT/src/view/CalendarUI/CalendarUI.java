@@ -197,7 +197,7 @@ public class CalendarUI extends JPanel{
 		            lb_timeStart.setFont(fontAdd);
 		            panel_add.add(lb_timeStart);
 		            JSpinner spinner = null;
-		            String start;
+		            String start = "";
 		            try {
 		                // Tạo đối tượng SimpleDateFormat để phân tích chuỗi thời gian
 		                SimpleDateFormat format = new SimpleDateFormat("HH:mm");
@@ -240,7 +240,7 @@ public class CalendarUI extends JPanel{
 		            lb_timeEnd.setFont(fontAdd);
 		            panel_add.add(lb_timeEnd);
 		            JSpinner spinner2 = null;
-		            String end;
+		            String end = "";
 		            try {
 		                // Tạo đối tượng SimpleDateFormat để phân tích chuỗi thời gian
 		                SimpleDateFormat format2 = new SimpleDateFormat("HH:mm");
@@ -312,11 +312,13 @@ public class CalendarUI extends JPanel{
 //		                app.getStyle().setFont(new Font("arial", Font.BOLD, 15));
 		                e.getItem().getStyle().setBrush(new SolidBrush(new Color(red, green, blue)));
 //		                app.setLocked(true);
-		                // Thêm mục "ADD" vào danh sách tạm thời
+//		                // Thêm mục "ADD" vào danh sách tạm thời
 //		                addItems.add(app);
-		
-		                // Thêm mục "ADD" vào lịch
+//		
+//		                // Thêm mục "ADD" vào lịch
 //		                calendar.getSchedule().getItems().add(app);
+		                
+//		                updateCalendarToServer(tf_title.getText(), selectedDate.toShortDateString(), start, end, red + "," + green + "," + blue);
 		            } else {
 		                // Xử lý khi người dùng nhấn Cancel hoặc đóng cửa sổ
 		            }
@@ -334,7 +336,7 @@ public class CalendarUI extends JPanel{
 	    Iterator<Appointment> iterator = addItems.iterator();
 	    while (iterator.hasNext()) {
 	        Appointment item = iterator.next();
-	        if ("ADD".equals(item.getHeaderText())) {
+	        if ("ADD".equals(item.getHeaderText()) || item.getHeaderText().isEmpty()) {
 	            calendar.getSchedule().getItems().remove(item);
 	            iterator.remove();
 	        }
@@ -354,6 +356,13 @@ public class CalendarUI extends JPanel{
 		Model_Calendar item = new Model_Calendar(0, title, day, timeStart, timeEnd, color);
 		Service.getInstance().addCalendar(item.toJsonObject("addCalendar"));
 	}
+	
+	public void updateCalendarToServer(String title, String day, String timeStart, String timeEnd, String color) {
+		Model_Calendar item = new Model_Calendar(0, title, day, timeStart, timeEnd, color);
+		Service.getInstance().updateCalendar(item.toJsonObject("updateCalendar"));
+	}
+	
+	
 	
 	
 	public void addCalendarFromServer(Model_Calendar item) {

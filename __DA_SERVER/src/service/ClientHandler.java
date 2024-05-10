@@ -28,12 +28,12 @@ public class ClientHandler extends Thread{
     }
     
     public void sendMessage(JSONObject jsonData) {
-        try {
-			out.writeBytes(jsonData.toString() + "\n");
-			out.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+            try {
+    			out.writeBytes(jsonData.toString() + "\n");
+    			out.flush();
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
     }
 
 	@Override

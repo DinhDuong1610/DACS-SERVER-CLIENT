@@ -106,6 +106,7 @@ public class ServiceUser {
           p.execute();
           p.close();
           writeFile(data.getUserName() + "|" + data.getAvatar_path(), true);
+//          writeFile2(data.getUserName(), data.getAvatar_path());
         } catch (SQLException e) {
         	e.printStackTrace();
         }
@@ -193,6 +194,7 @@ public class ServiceUser {
                     String phone = r.getString(5);
                     String address = r.getString(6);
                     String avatar_path = readFile(r.getString(7));
+//                    String avatar_path = readFile2(r.getString(7));
                     data = new Model_User_Account(userID, userName, fullName, email, phone, address, avatar_path, true);
                     return data;
                 }
@@ -222,6 +224,7 @@ public class ServiceUser {
                 String phone = r.getString(5);
                 String address = r.getString(6);
                 String avatar_path = readFile(r.getString(7));
+//                String avatar_path = readFile2(r.getString(7));
                 list.add(new Model_User_Account(userID, userName, fullName, email, phone, address, avatar_path, true));
             }
             r.close();
@@ -256,6 +259,17 @@ public class ServiceUser {
         try {
             FileWriter fw = new FileWriter("src/connection/DataImage", append);
             BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(data +"\n");
+            bw.close();
+        } catch (Exception e) {
+        	e.printStackTrace();
+        }
+	}
+	
+	public void writeFile2(String user, String data) {
+        try {
+            FileWriter fw = new FileWriter("src/imageUser/" + user);
+            BufferedWriter bw = new BufferedWriter(fw);
             bw.write(data);
             bw.close();
         } catch (Exception e) {
@@ -282,4 +296,20 @@ public class ServiceUser {
         }
         return null;
 	}
+	
+    public String readFile2(String user) {
+        String data = "";
+        try {
+            FileReader fr = new FileReader("src/imageUser/" + user);
+            BufferedReader br = new BufferedReader(fr);
+            String line;
+            while ((line = br.readLine()) != null) {
+                data = line;
+            }
+            br.close();
+        } catch (Exception e) {
+            System.err.println("Đã xảy ra lỗi khi đọc file: " + e.getMessage());
+        }
+        return data;
+    }
 }

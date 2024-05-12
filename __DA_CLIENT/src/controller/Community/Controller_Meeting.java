@@ -5,18 +5,19 @@ import java.awt.event.ActionListener;
 
 import view.CommunityUI.form.Body;
 
-public class Controller_Member implements ActionListener{
+public class Controller_Meeting implements ActionListener{
 	private Body body;
-
-	public Controller_Member(Body body) {
+	
+	public Controller_Meeting(Body body) {
+		super();
 		this.body = body;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == body.getTitle().getBt_member()) {
-			System.out.println("create new meeeting");
-			body.memberProject();
+		if(e.getSource() == body.getTitle().getBt_newMeeting()) {
+			body.createMeeting();
 		}
 	}
+
 }

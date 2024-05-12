@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,6 +16,7 @@ import model.Chat.Model_Message;
 import model.Chat.Model_Receive_Message;
 import model.Chat.Model_User_Account;
 import model.calendar.Model_Calendar;
+import model.community.Model_Meeting;
 import model.community.Model_Post;
 import model.community.Model_Project;
 import view.MainUI;
@@ -126,8 +128,12 @@ public class Service {
 	    		main.getHome_community().getBody().getPage().getNews().post(post);
 	    	}
 	    	else if(jsonData.getString("type").equals("listPost")) {
-	    		Model_Post post = new Model_Post(jsonData);
-	    		main.getHome_community().getBody().getPage().getNews().post(post);
+	    		JSONArray jsonArray = jsonData.getJSONArray("jsonArray");
+	            for (int i = 0; i < jsonArray.length(); i++) {
+	                JSONObject json = jsonArray.getJSONObject(i);
+	                Model_Post post = new Model_Post(json);
+	                main.getHome_community().getBody().getPage().getNews().post(post);	            
+	            }
 	    	}
 	    	else if(jsonData.getString("type").equals("listMember")) {
 	    		Model_User_Account user = new Model_User_Account(jsonData);
@@ -140,6 +146,19 @@ public class Service {
 	    	else if(jsonData.getString("type").equals("listCalendar")) {
 	    		Model_Calendar item = new Model_Calendar(jsonData);
 	    		main.getCalendarUI().addCalendarFromServer(item);
+	    	}
+	    	else if(jsonData.getString("type").equals("addMeeting")) {
+	    		Model_Meeting meeting = new Model_Meeting(jsonData);
+	    		main.getHome_community().getBody().getPage().getMeets().addMeet(meeting);
+	    	}
+	    	else if(jsonData.getString("type").equals("listMeeting")) {
+	    		JSONArray jsonArray = jsonData.getJSONArray("jsonArray");
+	    		List<Model_Meeting> list = new ArrayList<>();
+	            for (int i = 0; i < jsonArray.length(); i++) {
+	                JSONObject json = jsonArray.getJSONObject(i);
+	                Model_Meeting meeting = new Model_Meeting(json);
+		    		main.getHome_community().getBody().getPage().getMeets().addMeet(meeting);
+	            }
 	    	}
 
 		} catch (JSONException e) {
@@ -364,6 +383,36 @@ public class Service {
     		}
         }).start(); 
     }    
+    
+    public void addMeeting(JSONObject jsonData) {
+        new Thread(() -> {
+            try {
+    			out.writeBytes(jsonData.toString() + "\n");
+    			out.flush();
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+        }).start(); 
+    }
+    
+    public synchronized void listMeeting(int projectId) {
+    	JSONObject json = new JSONObject();
+		try {
+			json.put("type", "listMeeting");
+			json.put("projectId", projectId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        new Thread(() -> {
+            try {
+    			out.writeBytes(json.toString() + "\n");
+    			out.flush();
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+        }).start(); 
+    }
+    
     
 	
     public Socket getClient() {

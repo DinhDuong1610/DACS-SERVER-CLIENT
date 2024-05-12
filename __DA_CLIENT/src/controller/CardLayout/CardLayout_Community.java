@@ -3,6 +3,7 @@ package controller.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import service.Service;
 import view.CommunityUI.form.Body;
 
 public class CardLayout_Community implements ActionListener{
@@ -20,6 +21,9 @@ public class CardLayout_Community implements ActionListener{
 		}
 		else if(e.getSource() == body.getTitle().getBt_event()) {
 			body.getPage().getCardLayout_Page().show(body.getPage(), "panel_event");
+			if(!body.getPage().getMeets().hasMeet()) {
+				Service.getInstance().listMeeting(body.getProject().getProjectId());
+			}
 		}
 		
 	}

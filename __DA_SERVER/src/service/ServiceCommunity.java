@@ -8,6 +8,7 @@ import java.util.List;
 
 import connection.DatabaseConnection;
 import model.Model_Community;
+import model.Model_Meeting;
 import model.Model_Post;
 import model.Model_Project;
 import model.Model_User_Account;
@@ -22,6 +23,8 @@ public class ServiceCommunity {
     private final String SELECT_POST = "SELECT postId, projectId, userName, avatarPath, timing, content FROM post WHERE projectId=?";
     private final String SELECT_MEMBER = "select user_account.User_ID, UserName,fullName, Email, Phone, Address, Avatar_path FROM user_account JOIN community_contact ON user_account.User_Id=community_contact.user_Id WHERE projectId=?";
     private final String SELECT_USER = "select User_ID, UserName,fullName, Email, Phone, Address, Avatar_path from user_account where userName=?";
+    private final String INSERT_MEETING = "INSERT INTO meeting (projectId, title, time) VALUES (?,?,?)";
+    private final String SELECT_MEETING = "SELECT meetingId, projectId, title, time FROM meeting WHERE projectId=?";
     
     public ServiceCommunity(int user_Id) {
         this.con = DatabaseConnection.getInstance().getConnection();
@@ -173,6 +176,47 @@ public class ServiceCommunity {
 			e.printStackTrace();
 			return null;
 		}
+    }
+    
+    public Model_Meeting addMeeting(Model_Meeting meeting) {
+    	try {
+    		PreparedStatement p = con.prepareStatement(INSERT_MEETING, PreparedStatement.RETURN_GENERATED_KEYS);
+            p.setInt(1, meeting.getProjectId());
+            p.setString(2, meeting.getTitle());
+            p.setString(3, meeting.getTime());
+            p.execute();
+            ResultSet r = p.getGeneratedKeys();
+            r.first();
+            int meetingId = r.getInt(1);
+            meeting.setMeetingId(meetingId);
+            r.close();
+            p.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	return meeting;
+    }
+    
+    public List<Model_Meeting> getMeeting(int projectId) {
+        List<Model_Meeting> list = new ArrayList<>();
+        try {
+            PreparedStatement p = con.prepareStatement(SELECT_MEETING);
+            p.setInt(1, projectId);
+            ResultSet r = p.executeQuery();
+            while (r.next()) {
+            	int meetingId = r.getInt(1);
+            	int project_Id = r.getInt(2);
+            	String title = r.getString(3);
+            	String time = r.getString(4);
+            	Model_Meeting meeting = new Model_Meeting(meetingId, project_Id, title, time);
+            	list.add(meeting);
+            }
+            r.close();
+            p.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return list;
     }
     
     

@@ -26,7 +26,9 @@ public class HomeCommu extends JPanel{
 		this.project = project;
 		body.setProject(project);
 		body.getPage().getNews().removeAll();
+		body.getPage().getMeets().removeAll();
 		Service.getInstance().listPost(project.getProjectId());
+//		Service.getInstance().listMeeting(project.getProjectId());
 		body.setVisible(true);
 		body.getTitle().getLb_nameProject().setText(project.getProjectName());
 	}

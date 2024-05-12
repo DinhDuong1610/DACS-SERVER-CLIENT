@@ -12,11 +12,13 @@ import java.util.List;
 
 import javax.swing.*;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import model.Model_Calendar;
 import model.Model_Login;
+import model.Model_Meeting;
 import model.Model_Message;
 import model.Model_Post;
 import model.Model_Project;
@@ -79,7 +81,7 @@ public class Service {
 		serviceCommunity = new ServiceCommunity(Integer.parseInt(client.getUserId()));
     	serviceCalendar = new ServiceCalendar(Integer.parseInt(client.getUserId()));
 		serviceMessage = new ServiceMessage(Integer.parseInt(client.getUserId()));
-    	String data=new String(newdata);
+    	String data = new String(newdata);
 		new Thread(()->{
     		try {
     			JSONObject jsonData = new JSONObject(data);
@@ -174,11 +176,42 @@ public class Service {
 	            	textArea.append("project id :" +  jsonData.getInt("projectId") + "\n");
     	            List<Model_Post> list = serviceCommunity.getPost(jsonData.getInt("projectId"));
     	            if(list.size() == 0) textArea.append("rong!!!!\n");
-    	            for(Model_Post post : list) {    	    
-    	            	broadcast(client.getUserId(), post.toJsonObject("listPost"));
+    	            JSONArray jsonArray = new JSONArray();
+    	            for(Model_Post post : list) {   
+    	            	jsonArray.put(post.toJsonObject("listPost"));
     	            	textArea.append("list post :" +  post.toJsonObject("listPost") + "\n");
     	            }
-    	            textArea.append("list project DONE \n");
+    	            JSONObject json = new JSONObject();
+    	            json.put("type", "listPost");
+    	            json.put("jsonArray", jsonArray);
+	            	broadcast(client.getUserId(), json);
+    	            textArea.append("list post DONE \n");
+    			}
+    			else if(jsonData.getString("type").equals("addMeeting")) {
+    				Model_Meeting meeting = serviceCommunity.addMeeting(new Model_Meeting(jsonData));
+    	            broadcast(client.getUserId(), meeting.toJsonObject("addMeeting"));
+    	            textArea.append("Add meeting :" + meeting.toJsonObject("addMeeting") + "\n");    	           
+    			}
+    			else if(jsonData.getString("type").equals("listMeeting")) {
+    	            List<Model_Meeting> list = serviceCommunity.getMeeting(jsonData.getInt("projectId"));
+    	            if(list.size() == 0) textArea.append("rong!!!!\n");
+//    	            for(Model_Post post : list) {    	    
+//    	            	broadcast(client.getUserId(), post.toJsonObject("listPost"));
+//    	            	textArea.append("list post :" +  post.toJsonObject("listPost") + "\n");
+//    	            }
+//    	            textArea.append("list project DONE \n");
+    	            
+    	            JSONArray jsonArray = new JSONArray();
+    	            for (Model_Meeting meeting : list) {
+    	                jsonArray.put(meeting.toJsonObject("listMeeting"));
+    	            }
+    	            
+    	            JSONObject json = new JSONObject();
+    	            json.put("type", "listMeeting");
+    	            json.put("jsonArray", jsonArray);
+    	            
+	            	broadcast(client.getUserId(), json);
+	            	textArea.append("list meeting DONE \n");
     			}
     			else if(jsonData.getString("type").equals("listMember")) {
 	            	textArea.append("list member :" +  jsonData + "\n");
@@ -214,6 +247,7 @@ public class Service {
     	            }
     	            textArea.append("list calendar DONE \n");
     			}
+
     		} catch (JSONException e) {
     			e.printStackTrace();
     		}

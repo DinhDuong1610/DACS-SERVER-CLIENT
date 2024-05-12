@@ -3,13 +3,16 @@ package view.CommunityUI.form;
 import java.awt.Color;
 
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
 import controller.CardLayout.CardLayout_Community;
+import controller.Community.Controller_Meeting;
 import controller.Community.Controller_Member;
 import model.Chat.Model_User_Account;
+import model.community.Model_Meeting;
 import model.community.Model_Project;
 import net.miginfocom.swing.MigLayout;
 import service.Service;
@@ -40,6 +43,8 @@ public class Body extends JPanel{
 		
 		Controller_Member action_member = new Controller_Member(this);
 		title.getBt_member().addActionListener(action_member);
+		Controller_Meeting action_meeting = new Controller_Meeting(this);
+		title.getBt_newMeeting().addActionListener(action_meeting);
 		cardLayout();
 	}
 	
@@ -51,6 +56,20 @@ public class Body extends JPanel{
 		dialog.setLocationRelativeTo(null);
 		dialog.add(member);
 		dialog.setVisible(true);
+	}
+	
+	public void createMeeting() {
+//		JDialog dialog = new JDialog();
+//		dialog.setSize(300, 300);
+//		dialog.setLocationRelativeTo(null);
+//		dialog.add(new Create_meeting(project));
+//		dialog.setVisible(true);
+		Create_meeting newMeeting = new Create_meeting(project);
+		int option = JOptionPane.showOptionDialog(this, newMeeting, "CREATE NEW MEETING", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
+        if (option == JOptionPane.OK_OPTION) {
+        	Model_Meeting meeting = new Model_Meeting(0, project.getProjectId(), newMeeting.getTf_title().getText(), newMeeting.getTime() );
+        	Service.getInstance().addMeeting(meeting.toJsonObject("addMeeting"));
+        }
 	}
 	
 	public void setUser(Model_User_Account user) {

@@ -134,6 +134,14 @@ public class Page extends JPanel{
 	public void setProject(Model_Project project) {
 		this.project = project;
 	}
+
+	public Meets getMeets() {
+		return meets;
+	}
+
+	public void setMeets(Meets meets) {
+		this.meets = meets;
+	}
 	
 	
 	

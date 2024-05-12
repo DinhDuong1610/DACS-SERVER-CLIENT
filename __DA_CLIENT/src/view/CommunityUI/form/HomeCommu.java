@@ -10,6 +10,7 @@ import service.Service;
 public class HomeCommu extends JPanel{
 	private Menu_Left menuLeft;
 	private Body body;
+	private Meeting_room meeting_room;
 	
 	private Model_Project project;
 	
@@ -33,6 +34,11 @@ public class HomeCommu extends JPanel{
 		body.getTitle().getLb_nameProject().setText(project.getProjectName());
 	}
 	
+	public void newMeetingRoom(int projectId) {
+		System.out.println("new meeting room");
+		meeting_room = new Meeting_room(projectId);
+	}
+	
 	public void setUser(Model_User_Account user) {
 		body.setUser(user);
 	}
@@ -47,6 +53,11 @@ public class HomeCommu extends JPanel{
 	public void setBody(Body body) {
 		this.body = body;
 	}
+
+	public Meeting_room getMeeting_room() {
+		return meeting_room;
+	}
+	
 	
 	
 	

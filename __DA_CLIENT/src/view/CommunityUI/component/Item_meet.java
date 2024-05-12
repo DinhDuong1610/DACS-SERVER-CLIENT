@@ -14,9 +14,12 @@ import javax.swing.border.EmptyBorder;
 
 import model.Chat.Model_User_Account;
 import model.community.Model_Meeting;
+import service.Service;
 import view.ChatUI.swing.ImageAvatar;
 import view.ChatUI.swing.JIMSendTextPane;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Item_meet extends JPanel{
 	private Model_Meeting meeting;
@@ -54,6 +57,13 @@ public class Item_meet extends JPanel{
 		lb_date.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		
 		JButton bt_join = new JButton("Join");
+		bt_join.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Service.getInstance().openMeeting(meeting.getMeetingId());
+				Service.getInstance().newMeetingRoom(meeting.getProjectId());	
+				Service.getInstance().listenMeeting(Service.getInstance().getUser().getUser_Id(), meeting.getMeetingId());
+			}
+		});
 		bt_join.setForeground(new Color(123, 104, 238));
 		bt_join.setFont(new Font("Tahoma", Font.BOLD, 22));
 		

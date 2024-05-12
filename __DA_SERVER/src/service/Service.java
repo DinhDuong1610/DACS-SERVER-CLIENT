@@ -1,15 +1,24 @@
 package service;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.SourceDataLine;
 import javax.swing.*;
 
 import org.json.JSONArray;
@@ -30,7 +39,7 @@ import model.Model_User_Account;
 public class Service {
     private static Service instance;
     private ServerSocket serverSocket;
-    private JTextArea textArea;
+    public JTextArea textArea;
     private final int PORT_NUMBER = 1610;
 	private ServiceUser serviceUser;
 	private ServiceCommunity serviceCommunity;
@@ -51,6 +60,32 @@ public class Service {
         serviceUser = new ServiceUser();
     }
 
+//    public void startServer() {
+//        new Thread(() -> {
+//            try {
+//            	serverSocket = new ServerSocket(PORT_NUMBER);
+//                textArea.append("Server has started on port: " + PORT_NUMBER + "\n");
+//                
+//                while (true) {
+//                    Socket clientSocket = serverSocket.accept();
+//                    textArea.append("One client connected\n");
+//                    
+//                    try {
+//                        BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+//                        DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
+//                        ClientHandler clientHandler = new ClientHandler(++id + "",this, in, out, clients);
+//                    }
+//                    catch (Exception e) {
+//                    	clientSocket.close();
+//                        e.printStackTrace();
+//                    }
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }).start();
+//    }
+    
     public void startServer() {
         new Thread(() -> {
             try {
@@ -64,10 +99,12 @@ public class Service {
                     try {
                         BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                         DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
-                        ClientHandler clientHandler = new ClientHandler(++id + "",this, in, out, clients);
+                        InputStream in_image = clientSocket.getInputStream();
+                        OutputStream out_image = clientSocket.getOutputStream();
+                        ClientHandler clientHandler = new ClientHandler(++id + "",this, in, out,in_image, out_image, clients, clientSocket);
                     }
                     catch (Exception e) {
-                    	clientSocket.close();
+//                    	clientSocket.close();
                         e.printStackTrace();
                     }
                 }
@@ -247,11 +284,31 @@ public class Service {
     	            }
     	            textArea.append("list calendar DONE \n");
     			}
+    			else if(jsonData.getString("type").equals("openMeeting")) {
+	            	int meetingId = jsonData.getInt("meetingId");
+	            	openMeeting(meetingId);
+    			}
 
     		} catch (JSONException e) {
+    			textArea.append("server nhan: " + data + "\n");
     			e.printStackTrace();
     		}
     	}).start();
+    }
+    
+    public void listenImage(BufferedImage img) {
+    	textArea.append("server image nhan: " + img.toString() + "\n");
+        broadcastImage(img);
+    }
+
+    public void broadcastImage(BufferedImage img) {
+        try {
+            for (ClientHandler client : clients) {
+                client.sendImage(img);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     
     public void broadcast(String userId, JSONObject jsonData) {
@@ -305,5 +362,123 @@ public class Service {
 //    	}).start();
     }
     
+    public void openMeeting(int meetingId) {
+        new Thread(() -> {
+            int UDP_PORT = meetingId;
+            DatagramSocket audioSocket;
+            DatagramPacket audioPacket;
+            SourceDataLine audio_out;
+        	SourceDataLine audioOut;
+        	try {
+    			AudioFormat format = getaudioformat();
+    			DataLine.Info info_out = new DataLine.Info(SourceDataLine.class, format);
+    			if (!AudioSystem.isLineSupported(info_out)) {
+    				System.out.println("Not support");
+    				System.exit(0);
+    			}
+    			audioOut = (SourceDataLine) AudioSystem.getLine(info_out);
+    			audioOut.open(format);
+    			audioOut.start();
+    			
+    			audioSocket = new DatagramSocket(UDP_PORT);
+    			textArea.append("Start UPD with PORT " + UDP_PORT + "\n");
+//    			audioSocket = new DatagramSocket();
+
+    			audio_out = audioOut;
+    			
+    			byte[] buffer = new byte[512];
+    	        DatagramPacket incoming = new DatagramPacket(buffer, buffer.length);
+    	        while (true) {
+    	            int i = 0;
+    	            try {
+    	            	audioSocket.receive(incoming);
+    	                buffer = incoming.getData();
+//    	                broadcastAudio(buffer);
+    	                
+    	        	    try {
+    	        	        for (ClientHandler client : clients) {
+    	        	            DatagramPacket packet = new DatagramPacket(buffer, buffer.length, client.getSocket().getInetAddress(), Integer.parseInt(client.getUserId()));
+    	        	            audioSocket.send(packet);   
+//    	        	            textArea.append("Audio data sent to: " + client.getSocket().getInetAddress() + " port: 7777" + client.getSocket().getPort() + "\n");
+//    	        	            textArea.append(audioData+"\n");
+    	        	        }
+    	        	    } catch (IOException e) {
+    	        	        e.printStackTrace();
+    	        	    }
+    	                
+    	                
+//    	                audio_out.write(buffer, 0, buffer.length);
+//    	                textArea.append("#" + i++);
+    	            } catch (IOException e) {
+    	                e.printStackTrace();
+    	            }
+    	        }
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+        }).start();
+        
+        new Thread(() -> {
+            int UDP_PORT = meetingId + 1000;
+            DatagramSocket audioSocket;
+            DatagramPacket audioPacket;
+        	try {   			
+    			audioSocket = new DatagramSocket(UDP_PORT);
+    			textArea.append("Start UPD with PORT " + UDP_PORT + "\n");
+    			
+    			byte[] buffer = new byte[65507];
+    	        DatagramPacket incoming = new DatagramPacket(buffer, buffer.length);
+    	        while (true) {
+    	            int i = 0;
+    	            try {
+    	            	audioSocket.receive(incoming);
+    	                buffer = incoming.getData();
+//    	                broadcastAudio(buffer);
+    	                
+    	        	    try {
+    	        	        for (ClientHandler client : clients) {
+    	        	            DatagramPacket packet = new DatagramPacket(buffer, buffer.length, client.getSocket().getInetAddress(), Integer.parseInt(client.getUserId()) + 1000);
+    	        	            audioSocket.send(packet);   
+//    	        	            textArea.append("Audio data sent to: " + client.getSocket().getInetAddress() + " port: 7777" + client.getSocket().getPort() + "\n");
+//    	        	            textArea.append(audioData+"\n");
+    	        	        }
+    	        	    } catch (IOException e) {
+    	        	        e.printStackTrace();
+    	        	    }
+    	                
+    	                
+//    	                audio_out.write(buffer, 0, buffer.length);
+//    	                textArea.append("#" + i++);
+    	            } catch (IOException e) {
+    	                e.printStackTrace();
+    	            }
+    	        }
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+        }).start();
+    }
+    
+	public static AudioFormat getaudioformat() {
+		float sampleRate = 8000.0F;
+		int sampleSizeInbits = 16;
+		int channel = 2;
+		boolean signed = true;
+		boolean bigEndian = false;
+		return new AudioFormat(sampleRate, sampleSizeInbits, channel, signed, signed);
+	}
+	
+//	public void broadcastAudio(byte[] audioData) {
+//	    try {
+//	        for (ClientHandler client : clients) {
+//	            DatagramPacket packet = new DatagramPacket(audioData, audioData.length, client.getSocket().getInetAddress(), UDP_PORT_CLIENT);
+//	            audioSocket.send(packet);   
+////	            textArea.append("Audio data sent to: " + client.getSocket().getInetAddress() + " port: 7777" + client.getSocket().getPort() + "\n");
+////	            textArea.append(audioData+"\n");
+//	        }
+//	    } catch (IOException e) {
+//	        e.printStackTrace();
+//	    }
+//	}
 	
 }

@@ -1,21 +1,69 @@
 package view.CommunityUI.form;
 
 import javax.swing.JPanel;
+
+import model.community.Model_Project;
+import service.Service;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+
 import javax.swing.JButton;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.awt.event.ActionEvent;
 
 public class Screen extends JPanel{
-	public Screen() {
+	private int projectId;
+	private JPanel panel;
+	
+	public Screen(int projectId) {
+		this.projectId = projectId;
+		
 		setBackground(new Color(169, 169, 169));
 		
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		
 		JButton bt_leave = new JButton("LEAVE");
 		
 		JButton bt_share = new JButton("SHARE");
+		bt_share.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("share màn hình");
+		        new Thread(() -> {
+					while(true) {
+						try {
+							Robot rob = new Robot();  
+							Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+                            BufferedImage img = rob.createScreenCapture(new Rectangle(0, 0, (int) d.getWidth(), (int) d.getHeight()));
+//			                Service.getInstance().share(img);
+//                            Service.getInstance().share(img);
+			                
+			                try {
+								Thread.sleep(10);
+							} catch (InterruptedException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
+	                    try {
+	                        Thread.sleep(500);
+	                    } catch (Exception e1) {
+	                    	e1.printStackTrace();
+	                    }
+					}
+
+		        }).start();
+			}
+		});
 		
 		JPanel panel_button_voice = new JPanel();
 		GroupLayout groupLayout = new GroupLayout(this);
@@ -55,4 +103,9 @@ public class Screen extends JPanel{
 		JButton bt_off= new JButton("OFF");
 		panel_button_voice.add(bt_off, "OFF");
 	}
+
+	public JPanel getPanel() {
+		return panel;
+	}
+	
 }

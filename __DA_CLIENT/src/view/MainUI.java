@@ -21,7 +21,7 @@ import view.ChatUI.form.Home;
 import view.ChatUI.form.Login;
 import view.ChatUI.form.View_Image;
 import view.CommunityUI.form.HomeCommu;
-
+import view.CommunityUI.form.Meeting_room;
 import service.Service;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -118,6 +118,8 @@ public class MainUI extends JFrame {
 	private Model_User_Account user;
 
 	private CalendarUI calendarUI;
+	
+	private Meeting_room meeting_room;
 
 
 	public static void main(String[] args) {
@@ -626,6 +628,7 @@ public class MainUI extends JFrame {
 		user.setAddress(ta_DiaChi_edit.getText());
 		user.setAvatar_path(imagePath);
 	}
+
 
 	public Login getLogin() {
 		return login;

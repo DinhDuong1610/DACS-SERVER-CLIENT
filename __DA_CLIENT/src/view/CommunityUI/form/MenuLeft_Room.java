@@ -19,6 +19,7 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 
 import model.Chat.Model_User_Account;
+import model.community.Model_Project;
 import net.miginfocom.swing.MigLayout;
 import view.MainUI;
 import view.ChatUI.component.Item_People;
@@ -29,8 +30,11 @@ import javax.swing.SwingConstants;
 public class MenuLeft_Room extends JPanel{
 	private JLayeredPane panel_menu_list;
 	private List<Model_User_Account> userAccount;
+	private int projectId;
 
-	public MenuLeft_Room() {
+	public MenuLeft_Room(int projectId) {
+		this.projectId = projectId;
+		
 		setSize(300, 803);
 		setLayout(new MigLayout("fillx, filly", "0[300]0", "0[35]0[100%,fill]0"));
 		

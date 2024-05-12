@@ -1,3 +1,6 @@
 /connection/
-/service/
+/lib/
+/main/
 /model/
+/module-info.class
+/service/

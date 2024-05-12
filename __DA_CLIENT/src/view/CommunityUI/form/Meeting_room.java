@@ -6,33 +6,39 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import model.community.Model_Project;
 import net.miginfocom.swing.MigLayout;
 import view.ChatUI.form.Menu_Left;
 
 public class Meeting_room extends JFrame {
-
+	
+	private int projectId;
 	private JPanel contentPane;
+	private MenuLeft_Room menuLeft;
+	private Screen screen;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Meeting_room frame = new Meeting_room();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					Meeting_room frame = new Meeting_room();
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the frame.
 	 */
-	public Meeting_room() {
+	public Meeting_room(int projectId) {
+		this.projectId = projectId;
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(-5,0, 1554, 850);
 		setTitle("MEETING-ROOM");
@@ -49,9 +55,24 @@ public class Meeting_room extends JFrame {
 		
 		panel_main.setLayout(new MigLayout("fillx, filly", "0[300!]5[fill, 100%]0", "0[fill]0"));
 		
-		panel_main.add(new MenuLeft_Room());
+		menuLeft = new MenuLeft_Room(projectId);
+		panel_main.add(menuLeft);
+		screen = new Screen(projectId);
+		panel_main.add(screen);
 		
-		panel_main.add(new Screen());
-
+		setVisible(true);
 	}
+
+	public int getProject() {
+		return projectId;
+	}
+
+	public MenuLeft_Room getMenuLeft() {
+		return menuLeft;
+	}
+
+	public Screen getScreen() {
+		return screen;
+	}
+	
 }

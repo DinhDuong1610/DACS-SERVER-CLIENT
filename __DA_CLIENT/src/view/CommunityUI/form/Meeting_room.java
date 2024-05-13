@@ -1,6 +1,7 @@
 package view.CommunityUI.form;
 
 import java.awt.EventQueue;
+import java.net.DatagramSocket;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -13,9 +14,12 @@ import view.ChatUI.form.Menu_Left;
 public class Meeting_room extends JFrame {
 	
 	private int projectId;
+	private int meetingId;
 	private JPanel contentPane;
 	private MenuLeft_Room menuLeft;
 	private Screen screen;
+	private DatagramSocket dout;
+	private DatagramSocket dout2;
 
 	/**
 	 * Launch the application.
@@ -36,8 +40,11 @@ public class Meeting_room extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Meeting_room(int projectId) {
+	public Meeting_room(int meetingId, int projectId,DatagramSocket dout, DatagramSocket dout2) {
+		this.meetingId = meetingId;
 		this.projectId = projectId;
+		this.dout = dout;
+		this.dout2 = dout2;
 		
 //		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(-5,0, 1554, 850);
@@ -57,7 +64,7 @@ public class Meeting_room extends JFrame {
 		
 		menuLeft = new MenuLeft_Room(projectId);
 		panel_main.add(menuLeft);
-		screen = new Screen(projectId);
+		screen = new Screen(projectId, dout, dout2, this);
 		panel_main.add(screen);
 		
 		setVisible(true);
@@ -74,5 +81,14 @@ public class Meeting_room extends JFrame {
 	public Screen getScreen() {
 		return screen;
 	}
+
+	public int getMeetingId() {
+		return meetingId;
+	}
+
+	public void setMeetingId(int meetingId) {
+		this.meetingId = meetingId;
+	}
+	
 	
 }

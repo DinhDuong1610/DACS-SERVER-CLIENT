@@ -57,7 +57,7 @@ public class Service {
     
     private Service(JTextArea textArea) {
         this.textArea = textArea;
-        serviceUser = new ServiceUser();
+        serviceUser = new ServiceUser(clients);
     }
 
 //    public void startServer() {
@@ -104,7 +104,7 @@ public class Service {
                         ClientHandler clientHandler = new ClientHandler(++id + "",this, in, out,in_image, out_image, clients, clientSocket);
                     }
                     catch (Exception e) {
-//                    	clientSocket.close();
+                    	clientSocket.close();
                         e.printStackTrace();
                     }
                 }
@@ -177,6 +177,11 @@ public class Service {
         	            json.put("jsonArray", jsonArray);
     	            	broadcast(client.getUserId(), json);
 //        	            client.setUserId(account.getUser_Id()+"");
+    	            	
+        	            JSONObject jsonActive = new JSONObject();
+        	            jsonActive.put("type", "active");
+        	            jsonActive.put("userId", account.getUser_Id());
+        	            broadcastActive(client.getUserId(), jsonActive);
         	                    	            
         	            textArea.append("\ncheck Login :" + message.isAction() + "message:" + message.getMessage() );    	            
     	            }    	            
@@ -310,6 +315,34 @@ public class Service {
 	            	int meetingId = jsonData.getInt("meetingId");
 	            	openMeeting(meetingId);
     			}
+    			else if(jsonData.getString("type").equals("joinMeeting")) {
+	            	textArea.append("list member in meeting :" +  jsonData + "\n");
+    	            List<Model_User_Account> list = serviceCommunity.getMember(jsonData.getInt("projectId"));
+    	            if(list.size() == 0) textArea.append("rong!!!!");
+    	        	JSONObject json = new JSONObject();
+    	    		try {
+    	    			json.put("type", "joinMeeting");
+    	    			json.put("meetingId", jsonData.getInt("meetingId"));
+    	    			json.put("projectId", jsonData.getInt("projectId"));
+    	    			json.put("userId", jsonData.getInt("userId"));
+    	    		} catch (Exception e) {
+    	    			e.printStackTrace();
+    	    		}
+    	            for(Model_User_Account user : list) {    	    
+    	            	broadcastMessage(user.getUser_Id()+"", json);
+    	            	textArea.append("new user join :" +  json + "\n");
+    	            };
+    			}
+    			else if(jsonData.getString("type").equals("joinedMeeting")) {
+    	        	JSONObject json = new JSONObject();
+    	    		try {
+    	    			json.put("type", "joinedMeeting");
+    	    			json.put("userId", jsonData.getInt("userId"));
+    	    		} catch (Exception e) {
+    	    			e.printStackTrace();
+    	    		} 	    
+    	            	broadcastMessage(jsonData.getInt("newUserId") + "", json);
+    			}
 
     		} catch (JSONException e) {
     			textArea.append("server nhan: " + data + "\n");
@@ -379,6 +412,16 @@ public class Service {
                 		client.sendMessage(jsonData);
                 		break;
                 	}
+                }
+            }
+//    	}).start();
+    }
+    
+    public void broadcastActive(String userId, JSONObject jsonData) {
+//    	new Thread(()-> {
+            for (ClientHandler client : clients) {
+                if(!client.getUserId().equals(userId)) {
+                	client.sendMessage(jsonData);
                 }
             }
 //    	}).start();

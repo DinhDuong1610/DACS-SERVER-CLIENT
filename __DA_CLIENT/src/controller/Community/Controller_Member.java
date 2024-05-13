@@ -15,7 +15,6 @@ public class Controller_Member implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == body.getTitle().getBt_member()) {
-			System.out.println("create new meeeting");
 			body.memberProject();
 		}
 	}

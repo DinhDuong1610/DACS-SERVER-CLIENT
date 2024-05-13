@@ -10,14 +10,18 @@ import model.ImageDecoder;
 import model.Chat.Model_User_Account;
 import view.ChatUI.event.PublicEvent;
 import view.ChatUI.swing.ImageAvatar;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class Item_People extends JPanel {
 	private ImageAvatar imageAvatar1;
     private JLabel lb;
     private boolean mouseOver;
     private final Model_User_Account user;
+	private JLabel lb_status;
 	
     public Item_People(Model_User_Account user) {
+    	setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     	this.user = user;
         initComponents();
         lb.setText(user.getFullName());
@@ -47,9 +51,10 @@ public class Item_People extends JPanel {
     }
 
     private void initComponents() {
-
         imageAvatar1 = new ImageAvatar();
+        imageAvatar1.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         lb = new JLabel();
+        lb.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         imageAvatar1.setBorderSize(0);
 //        imageAvatar1.setImage(new ImageIcon(getClass().getResource("/images/testing/avatar.png")));
@@ -57,29 +62,51 @@ public class Item_People extends JPanel {
         lb.setFont(new java.awt.Font("sansserif", Font.BOLD, 18)); // NOI18N
         lb.setText("Name");
         setBackground(new Color(255, 255, 255));
+        
+//        lb_status= new JLabel(".");
+        lb_status = new JLabel(".");
+        lb_status.setSize(5,  5);
+        active(user.isStatus());
+        
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(imageAvatar1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lb, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
-                .addContainerGap())
+        	layout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(layout.createSequentialGroup()
+        			.addComponent(imageAvatar1, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(lb, GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(lb_status, 10, 10, Short.MAX_VALUE)
+        			.addContainerGap())
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(imageAvatar1, javax.swing.GroupLayout.PREFERRED_SIZE,45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lb, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+        	layout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(layout.createSequentialGroup()
+        			.addGroup(layout.createParallelGroup(Alignment.LEADING)
+        				.addComponent(imageAvatar1, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE)
+        				.addGroup(layout.createParallelGroup(Alignment.BASELINE)
+        					.addComponent(lb, GroupLayout.PREFERRED_SIZE, 49, GroupLayout.PREFERRED_SIZE)
+        					.addComponent(lb_status, 10, 10, Short.MAX_VALUE)))
+        			.addContainerGap(50, Short.MAX_VALUE))
         );
+        this.setLayout(layout);
     }
     
     public Model_User_Account getUser() {
         return user;
+    }
+    
+    public void active(boolean active) {
+    	user.setStatus(active);
+    	if(active) {
+            lb_status.setBackground(Color.GREEN);
+            lb_status.setForeground(Color.GREEN);
+            lb_status.setOpaque(true);
+    	}
+    	else {
+            lb_status.setBackground(new Color(255, 255, 255));
+            lb_status.setForeground(new Color(255, 255, 255));
+            lb_status.setOpaque(true);
+    	}
     }
 }

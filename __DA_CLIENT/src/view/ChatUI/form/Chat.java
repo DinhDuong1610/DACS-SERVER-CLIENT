@@ -75,6 +75,15 @@ public class Chat extends JPanel{
 	public Chat_Body getChatBody() {
 		return chatBody;
 	}
+
+	public Chat_Title getChatTitle() {
+		return chatTitle;
+	}
+
+	public void setChatTitle(Chat_Title chatTitle) {
+		this.chatTitle = chatTitle;
+	}
     
+	
     
 }

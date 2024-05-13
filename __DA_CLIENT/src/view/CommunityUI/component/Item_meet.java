@@ -19,6 +19,8 @@ import view.ChatUI.swing.ImageAvatar;
 import view.ChatUI.swing.JIMSendTextPane;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.net.DatagramSocket;
+import java.net.SocketException;
 import java.awt.event.ActionEvent;
 
 public class Item_meet extends JPanel{
@@ -59,9 +61,18 @@ public class Item_meet extends JPanel{
 		JButton bt_join = new JButton("Join");
 		bt_join.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Service.getInstance().openMeeting(meeting.getMeetingId());
-				Service.getInstance().newMeetingRoom(meeting.getProjectId());	
-				Service.getInstance().listenMeeting(Service.getInstance().getUser().getUser_Id(), meeting.getMeetingId());
+				try {
+					DatagramSocket dout = new DatagramSocket(Service.getInstance().getUser().getUser_Id());
+					DatagramSocket dout2 = new DatagramSocket(Service.getInstance().getUser().getUser_Id() + 1000); 
+					Service.getInstance().openMeeting(meeting.getMeetingId());
+					Service.getInstance().newMeetingRoom(meeting.getMeetingId(), meeting.getProjectId(), dout, dout2);	
+    				Service.getInstance().getMain().getHome_community().getMeeting_room().getMenuLeft().newUser(Service.getInstance().getUser());
+					Service.getInstance().joinMeeting(meeting.getMeetingId(), Service.getInstance().getUser().getUser_Id(), meeting.getProjectId());					
+					Service.getInstance().listenMeeting(Service.getInstance().getUser().getUser_Id(), meeting.getMeetingId(), dout, dout2);
+				} catch (SocketException e1) {
+					e1.printStackTrace();
+				}
+
 			}
 		});
 		bt_join.setForeground(new Color(123, 104, 238));
@@ -106,4 +117,14 @@ public class Item_meet extends JPanel{
 		setBackground(Color.white);
 		panel_content.setBackground(Color.white);
 	}
+
+	public Model_Meeting getMeeting() {
+		return meeting;
+	}
+
+	public void setMeeting(Model_Meeting meeting) {
+		this.meeting = meeting;
+	}
+	
+	
 }

@@ -75,7 +75,7 @@ public class Page extends JPanel{
 	}
 	
 	public void postNewPost() {
-		String userName = Service.getInstance().getUser().getUserName();
+		String userName = Service.getInstance().getUser().getFullName();
 		String avatarPath = Service.getInstance().getUser().getAvatar_path();
 		String content = startNewPost.getTextArea().getText();
 	

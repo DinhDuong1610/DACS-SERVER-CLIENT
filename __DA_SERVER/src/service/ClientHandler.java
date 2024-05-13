@@ -6,12 +6,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ClientHandler extends Thread{
@@ -75,11 +78,25 @@ public class ClientHandler extends Thread{
 		                service.listen(this, message);
 //		                broadcast(message);
 	                }
-
 	            } catch (Exception e) {
 	                e.printStackTrace();
+    	            try {
+    	            	JSONObject jsonActive = new JSONObject();
+						jsonActive.put("type", "noActive");
+	    	            jsonActive.put("userId", Integer.parseInt(userId));
+	    	            service.broadcastActive(userId, jsonActive);
+	    	            
+	    	            for (ClientHandler client : clients) {
+	    	                if (client.getUserId().equals(userId)) {
+	    	                	clients.remove(client);
+	    	                	break;
+	    	                }
+	    	            }
+					} catch (JSONException e1) {
+						e1.printStackTrace();
+					}
 	                System.out.println("đóng clientHandler");
-//	                break;
+	                break;
 	            }
 	        }
 		}).start();

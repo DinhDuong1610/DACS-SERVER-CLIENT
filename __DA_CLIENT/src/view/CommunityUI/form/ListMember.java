@@ -33,7 +33,7 @@ public class ListMember extends JPanel{
 	public ListMember(Model_Project project) {
 		this.project = project;
 		setSize(300, 803);
-		setLayout(new MigLayout("fillx, filly", "0[300]0", "0[50]0[100%,fill]0"));
+		setLayout(new MigLayout("fillx, filly", "0[290]0", "0[50]0[100%,fill]0"));
 		JPanel panel_menu = new JPanel();
 		add(panel_menu, "width 300:300:300, wrap");
 		panel_menu.setLayout(new GridLayout(1, 1, 0, 0));

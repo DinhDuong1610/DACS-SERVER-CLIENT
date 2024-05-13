@@ -102,6 +102,18 @@ public class Menu_Left extends JPanel{
 		panel_menu_list.removeAll();
 	}
 	
+	public void loadActive(int userId, boolean isActive) {
+		Component[] components = panel_menu_list.getComponents();
+		for (Component component : components) {
+		    if (component instanceof Item_People) {
+		        Item_People item = (Item_People) component;
+		        if(item.getUser().getUser_Id() == userId) {
+		        	item.active(isActive);
+		        }
+		    }
+		}
+	}
+	
 	public void showPeople() {
 		panel_menu_list.removeAll();
 		
@@ -135,6 +147,15 @@ public class Menu_Left extends JPanel{
 			}
 		}
 		return false;
+	}
+	
+	public Model_User_Account getUser(int userId) {
+		for(Model_User_Account user : userAccount) {
+			if(user.getUser_Id() == userId) {
+				return user;
+			}
+		}
+		return null;
 	}
 
 	public JLayeredPane getPanel_menu_list() {

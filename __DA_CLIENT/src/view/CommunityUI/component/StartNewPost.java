@@ -39,7 +39,7 @@ public class StartNewPost extends JPanel{
 //		imageAvatar.setImage(new ImageIcon(getClass().getResource("/images/testing/avatar.png")));
 		imageAvatar.setImage(ImageDecoder.decodeStringToImageIcon(user.getAvatar_path()));
 		
-		JLabel lb_userName = new JLabel(user.getUserName());
+		JLabel lb_userName = new JLabel(user.getFullName());
 		lb_userName.setFont(new Font("Tahoma", Font.BOLD, 22));
 		GroupLayout gl_panel_title = new GroupLayout(panel_title);
 		gl_panel_title.setHorizontalGroup(

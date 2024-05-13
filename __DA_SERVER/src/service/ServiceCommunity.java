@@ -135,7 +135,7 @@ public class ServiceCommunity {
                 String phone = r.getString(5);
                 String address = r.getString(6);
                 String avatar_path = r.getString(7);
-                list.add(new Model_User_Account(userID, userName, fullName, email, phone, address, avatar_path, true));
+                list.add(new Model_User_Account(userID, userName, fullName, email, phone, address, avatar_path, false));
             }
             r.close();
             p.close();
@@ -160,7 +160,7 @@ public class ServiceCommunity {
                     String phone = r.getString(5);
                     String address = r.getString(6);
                     String avatar_path = r.getString(7);
-                    account = new Model_User_Account(userMemberID, userName, fullName, email, phone, address, avatar_path, true);
+                    account = new Model_User_Account(userMemberID, userName, fullName, email, phone, address, avatar_path, false);
                 }
                 r.close();
                 p.close();

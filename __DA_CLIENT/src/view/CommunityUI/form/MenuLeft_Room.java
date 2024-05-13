@@ -69,31 +69,24 @@ public class MenuLeft_Room extends JPanel{
 		panel_menu_list.removeAll();
 	}
 	
+	 public void newUser(Model_User_Account d) {	
+		  userAccount.add(d);
+		  panel_menu_list.add(new Item_People(d), "width 296:296:296, height 50:50:50, wrap");
+		  panel_menu_list.repaint();
+		  panel_menu_list.revalidate();
+	}
+	
 	public void showPeople() {
 		panel_menu_list.removeAll();
 		
         for (Model_User_Account d : userAccount) {
         	panel_menu_list.add(new Item_People(d), "width 296:296:296, height 50:50:50, wrap");
         }
-        
-//		panel_menu_list.add(new Item_People("Đính Dương"), "width 296:296:296, height 50:50:50, wrap");
-//		panel_menu_list.add(new Item_People("Lê Hữu Anh Tú"), "width 296:296:296, height 50:50:50, wrap");
-//		panel_menu_list.add(new Item_People("Cao Hoàng Phước Bảo"), "width 296:296:296, height 50:50:50, wrap");
-//		for(int i = 1; i <= 20; i++) {
-//			panel_menu_list.add(new Item_People("People " + i), "width 296:296:296, height 50:50:50, wrap");
-//		}
+
 		panel_menu_list.repaint();
 		panel_menu_list.revalidate();
 	}
-	
-	public void showGroup() {
-//		panel_menu_list.removeAll();
-//		for(int i = 1; i <= 10; i++) {
-//			panel_menu_list.add(new Item_People("Group " + i), "width 296:296:296, height 50:50:50, wrap");
-//		}
-//		panel_menu_list.repaint();
-//		panel_menu_list.revalidate();
-	}
+
 	
 	public boolean searchUser(String userName) {
 		for(Model_User_Account user : userAccount) {

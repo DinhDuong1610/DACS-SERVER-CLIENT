@@ -39,7 +39,7 @@ public class Model_User_Account {
             phone = obj.getString("phone");
             address = obj.getString("address");
             avatar_path = obj.getString("avatar_path");
-//            status = obj.getBoolean("status");
+            status = obj.getBoolean("status");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -56,7 +56,7 @@ public class Model_User_Account {
 			json.put("phone", phone);
 			json.put("address", address);
 			json.put("avatar_path", avatar_path);
-//			json.put("status", true);
+			json.put("status", status);
 			return json;
 		} catch (Exception e) {
 			e.printStackTrace();

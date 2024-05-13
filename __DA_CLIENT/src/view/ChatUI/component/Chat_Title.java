@@ -34,7 +34,7 @@ public class Chat_Title extends JPanel{
 		
 		lbStatus.setForeground(new Color(71, 212, 90));
 		lbStatus.setFont(new Font("sansserif", Font.BOLD, 16));
-		lbStatus.setText("Active now");
+		setStatusText(true);
 		layer.add(lbStatus);
 		
 		GroupLayout layout = new GroupLayout(this);
@@ -59,11 +59,11 @@ public class Chat_Title extends JPanel{
     public void setUserName(Model_User_Account user) {
         this.user = user;
         lbName.setText(user.getFullName());
-//        if (user.isStatus()) {
-//            statusActive();
-//        } else {
-//            setStatusText("Offline");
-//        }
+        if (user.isStatus()) {
+        	setStatusText(true);
+        } else {
+        	setStatusText(false);
+        }
     }
 
     public void updateUser(Model_User_Account user) {
@@ -86,12 +86,50 @@ public class Chat_Title extends JPanel{
 		lbStatus.setForeground(new Color(40, 147, 59));
 	}
 	
-	public void setStatusText(String text) {
-		lbStatus.setText(text);
-		lbStatus.setForeground(new Color(160, 160, 160));
+	public void setStatusText(boolean active) {
+		if(active) {
+			lbStatus.setText("Online");
+			lbStatus.setForeground(Color.GREEN);
+		}
+		else {
+			lbStatus.setText("Offline");
+			lbStatus.setForeground(new Color(151, 41, 32));
+		}
 	}
+	
+	
 	
     public Model_User_Account getUser() {
         return user;
     }
+
+	public JLayeredPane getLayer() {
+		return layer;
+	}
+
+	public void setLayer(JLayeredPane layer) {
+		this.layer = layer;
+	}
+
+	public JLabel getLbName() {
+		return lbName;
+	}
+
+	public void setLbName(JLabel lbName) {
+		this.lbName = lbName;
+	}
+
+	public JLabel getLbStatus() {
+		return lbStatus;
+	}
+
+	public void setLbStatus(JLabel lbStatus) {
+		this.lbStatus = lbStatus;
+	}
+
+	public void setUser(Model_User_Account user) {
+		this.user = user;
+	}
+    
+    
 }

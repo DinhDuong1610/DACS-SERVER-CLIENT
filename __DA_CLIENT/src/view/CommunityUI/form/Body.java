@@ -52,7 +52,7 @@ public class Body extends JPanel{
 		JDialog dialog = new JDialog();
 		member = new ListMember(project);
 		Service.getInstance().listMember(project.getProjectId());
-		dialog.setSize(300, 400);
+		dialog.setSize(310, 400);
 		dialog.setLocationRelativeTo(null);
 		dialog.add(member);
 		dialog.setVisible(true);

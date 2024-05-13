@@ -1,5 +1,7 @@
 package view.CommunityUI.form;
 
+import java.net.DatagramSocket;
+
 import javax.swing.*;
 
 import model.Chat.Model_User_Account;
@@ -34,9 +36,9 @@ public class HomeCommu extends JPanel{
 		body.getTitle().getLb_nameProject().setText(project.getProjectName());
 	}
 	
-	public void newMeetingRoom(int projectId) {
+	public void newMeetingRoom(int meetingId, int projectId, DatagramSocket dout, DatagramSocket dout2) {
 		System.out.println("new meeting room");
-		meeting_room = new Meeting_room(projectId);
+		meeting_room = new Meeting_room(meetingId, projectId, dout, dout2);
 	}
 	
 	public void setUser(Model_User_Account user) {

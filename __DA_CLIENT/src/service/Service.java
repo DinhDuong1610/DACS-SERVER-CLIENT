@@ -18,6 +18,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -264,7 +265,28 @@ public class Service {
 		    		main.getHome_community().getBody().getPage().getMeets().addMeet(meeting);
 	            }
 	    	}
-
+	    	else if(jsonData.getString("type").equals("active")) {
+	    		int id = jsonData.getInt("userId");
+	    		main.getHome().loadActive(id, true);
+	    	}
+	    	else if(jsonData.getString("type").equals("noActive")) {
+	    		int id = jsonData.getInt("userId");
+	    		main.getHome().loadActive(id, false);
+	    	}
+	    	else if(jsonData.getString("type").equals("joinMeeting")) {   				
+    			if(main.getHome_community().getMeeting_room().getMeetingId() == jsonData.getInt("meetingId")) {
+    				Model_User_Account user = main.getHome().getMenu_Left().getUser(jsonData.getInt("userId"));
+    				user.setStatus(true);
+    				main.getHome_community().getMeeting_room().getMenuLeft().newUser(user);
+    				
+    				joinedMeeting(Service.getInstance().getUser().getUser_Id(), jsonData.getInt("userId"));
+    			}
+	    	}
+	    	else if(jsonData.getString("type").equals("joinedMeeting")) {   				
+    				Model_User_Account user = main.getHome().getMenu_Left().getUser(jsonData.getInt("userId"));
+    				user.setStatus(true);
+    				main.getHome_community().getMeeting_room().getMenuLeft().newUser(user);
+	    	}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -283,13 +305,13 @@ public class Service {
 	}
 	
 	
-	public void listenMeeting(int userId, int meetingId) {
+	public void listenMeeting(int userId, int meetingId, DatagramSocket out1, DatagramSocket out2) {
         new Thread(() -> {
         	int UDP_PORT = userId;
         	int UDP_PORT_SERVER = meetingId;
         	TargetDataLine audio_in;
         	SourceDataLine audio_out;
-        	DatagramSocket dout;
+        	DatagramSocket dout = out1;
         	try {
         		AudioFormat format = getaudioformat();
         		DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
@@ -300,8 +322,8 @@ public class Service {
         		audio_in.open(format);
         		audio_in.start();
         		
-        		InetAddress inet = InetAddress.getByName("localhost");
-        		dout = new DatagramSocket(UDP_PORT);
+        		InetAddress inet = InetAddress.getByName("localhost");        		
+//        		dout = new DatagramSocket(UDP_PORT);
         		
         		byte byte_buff[] = new byte[512];
         		thread_mic = new Thread(()-> {
@@ -312,7 +334,7 @@ public class Service {
                             DatagramPacket data = new DatagramPacket(byte_buff, byte_buff.length, inet, UDP_PORT_SERVER);
                             System.out.println(user.getUserName() + " mic");
                             dout.send(data);
-                        } catch (IOException e) {
+                        } catch (IOException e) {                        	
                             e.printStackTrace();
                         }
                     }       			                    
@@ -360,12 +382,12 @@ public class Service {
         	try {
             	int UDP_PORT = userId + 1000;
             	int UDP_PORT_SERVER = meetingId + 1000;
-            	DatagramSocket dout;
+            	DatagramSocket dout = out2;
         		byte[] buffer = new byte[65507];
 //        		byte[] buffer = new byte[1024 * 1024];
                 DatagramPacket incoming = new DatagramPacket(buffer, buffer.length);
     			InetAddress inet = InetAddress.getByName("localhost");
-    			dout = new DatagramSocket(UDP_PORT);        		
+//    			dout = new DatagramSocket(UDP_PORT);        		
                 
 		        thread_img = new Thread(() -> {
 					while(on_img) {
@@ -718,10 +740,48 @@ public class Service {
         }).start(); 
     }
     
+    public void joinMeeting(int meetingId, int userId, int projectId) {
+    	JSONObject json = new JSONObject();
+		try {
+			json.put("type", "joinMeeting");
+			json.put("meetingId", meetingId);
+			json.put("projectId", projectId);
+			json.put("userId", userId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        new Thread(() -> {
+            try {
+    			out.writeBytes(json.toString() + "\n");
+    			out.flush();
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+        }).start(); 
+    }
+    
+    public void joinedMeeting(int userId, int newUserId) {
+    	JSONObject json = new JSONObject();
+		try {
+			json.put("type", "joinedMeeting");
+			json.put("userId", userId);
+			json.put("newUserId", newUserId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        new Thread(() -> {
+            try {
+    			out.writeBytes(json.toString() + "\n");
+    			out.flush();
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+        }).start(); 
+    }
     
     
-    public void newMeetingRoom(int projectId) {
-    	main.getHome_community().newMeetingRoom(projectId);
+    public void newMeetingRoom(int meetingId, int projectId, DatagramSocket dout, DatagramSocket dout2) {
+    	main.getHome_community().newMeetingRoom(meetingId, projectId ,dout, dout2);
     }
 	
     public Socket getClient() {

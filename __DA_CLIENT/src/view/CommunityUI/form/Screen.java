@@ -18,6 +18,7 @@ import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.net.DatagramSocket;
 import java.awt.event.ActionEvent;
 
 public class Screen extends JPanel{
@@ -25,15 +26,28 @@ public class Screen extends JPanel{
 	private JPanel panel;
 	private CardLayout cardLayout_share;
 	private CardLayout cardLayout_mic;
+	private DatagramSocket dout;
+	private DatagramSocket dout2;
+	private Meeting_room meeting_room;
 	
-	public Screen(int projectId) {
+	public Screen(int projectId, DatagramSocket dout, DatagramSocket dout2, Meeting_room meeting_room) {
 		this.projectId = projectId;
+		this.dout = dout;
+		this.dout2 = dout2;
+		this.meeting_room = meeting_room;
 		
 		setBackground(new Color(169, 169, 169));
 		
 		panel = new JPanel();
 		
 		JButton bt_leave = new JButton("LEAVE");
+		bt_leave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dout.close();
+				dout2.close();
+				meeting_room.dispose();
+			}
+		});
 		
 		JPanel panel_button_voice = new JPanel();
 		
@@ -116,6 +130,7 @@ public class Screen extends JPanel{
 		});
 		panel_button_voice.add(bt_off_mic, "bt_off_mic");
 	}
+	
 
 	public JPanel getPanel() {
 		return panel;

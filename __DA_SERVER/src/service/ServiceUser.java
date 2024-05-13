@@ -19,7 +19,9 @@ import model.Model_Register;
 import model.Model_User_Account;
 
 public class ServiceUser {
-    private final String SELECT_USER_ACCOUNT = "select User_ID, UserName,fullName, Email, Phone, Address, Avatar_path from user_account limit 3"; // limit 3
+	private ArrayList<ClientHandler> clients;
+	
+    private final String SELECT_USER_ACCOUNT = "select User_ID, UserName,fullName, Email, Phone, Address, Avatar_path from user_account limit 5"; // limit 3
     private final String INSERT_USER = "insert into user (UserName, `Password`) values (?,?)";
     private final String INSERT_USER_ACCOUNT = "insert into user_account (User_ID, UserName, fullName, Email, Phone, Address, Avatar_path, status) values (? ,? , ?, ?, ?, ?, ?, 1)";
     private final String CHECK_USER = "select User_ID from user where UserName =? limit 1";
@@ -33,8 +35,9 @@ public class ServiceUser {
     
     private int user_Id;
     
-    public ServiceUser() {
+    public ServiceUser(ArrayList<ClientHandler> clients) {
         this.con = DatabaseConnection.getInstance().getConnection();
+        this.clients = clients;
         user_Id = 0;
     }
 
@@ -225,7 +228,11 @@ public class ServiceUser {
                 String address = r.getString(6);
                 String avatar_path = readFile(r.getString(7));
 //                String avatar_path = readFile2(r.getString(7));
-                list.add(new Model_User_Account(userID, userName, fullName, email, phone, address, avatar_path, true));
+                boolean status = false;
+                if(isActive(userID+"")) {
+                	status = true;
+                }                
+                list.add(new Model_User_Account(userID, userName, fullName, email, phone, address, avatar_path, status));
             }
             r.close();
             p.close();
@@ -312,4 +319,14 @@ public class ServiceUser {
         }
         return data;
     }
+    
+    public boolean isActive(String userId) {
+        for (ClientHandler client : clients) {
+            if (client.getUserId().equals(userId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
 }

@@ -39,7 +39,7 @@ public class Meeting_room extends JFrame {
 	public Meeting_room(int projectId) {
 		this.projectId = projectId;
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(-5,0, 1554, 850);
 		setTitle("MEETING-ROOM");
 		contentPane = new JPanel();

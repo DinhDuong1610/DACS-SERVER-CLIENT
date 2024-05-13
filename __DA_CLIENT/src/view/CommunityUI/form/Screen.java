@@ -1,6 +1,7 @@
 package view.CommunityUI.form;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import model.community.Model_Project;
 import service.Service;
@@ -22,6 +23,8 @@ import java.awt.event.ActionEvent;
 public class Screen extends JPanel{
 	private int projectId;
 	private JPanel panel;
+	private CardLayout cardLayout_share;
+	private CardLayout cardLayout_mic;
 	
 	public Screen(int projectId) {
 		this.projectId = projectId;
@@ -32,55 +35,24 @@ public class Screen extends JPanel{
 		
 		JButton bt_leave = new JButton("LEAVE");
 		
-		JButton bt_share = new JButton("SHARE");
-		bt_share.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("share màn hình");
-		        new Thread(() -> {
-					while(true) {
-						try {
-							Robot rob = new Robot();  
-							Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-                            BufferedImage img = rob.createScreenCapture(new Rectangle(0, 0, (int) d.getWidth(), (int) d.getHeight()));
-//			                Service.getInstance().share(img);
-//                            Service.getInstance().share(img);
-			                
-			                try {
-								Thread.sleep(10);
-							} catch (InterruptedException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-						} catch (Exception e1) {
-							e1.printStackTrace();
-						}
-	                    try {
-	                        Thread.sleep(500);
-	                    } catch (Exception e1) {
-	                    	e1.printStackTrace();
-	                    }
-					}
-
-		        }).start();
-			}
-		});
-		
 		JPanel panel_button_voice = new JPanel();
+		
+		JPanel panel_button_share = new JPanel();
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
+			groupLayout.createParallelGroup(Alignment.TRAILING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(panel, GroupLayout.DEFAULT_SIZE, 1189, Short.MAX_VALUE)
 					.addContainerGap())
-				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-					.addGap(250)
-					.addComponent(bt_share, GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
-					.addGap(204)
-					.addComponent(bt_leave, GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(233)
+					.addComponent(panel_button_share, GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
+					.addGap(178)
+					.addComponent(bt_leave, GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
 					.addGap(165)
-					.addComponent(panel_button_voice, GroupLayout.DEFAULT_SIZE, 74, Short.MAX_VALUE)
-					.addGap(304))
+					.addComponent(panel_button_voice, GroupLayout.PREFERRED_SIZE, 141, GroupLayout.PREFERRED_SIZE)
+					.addGap(244))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -89,23 +61,63 @@ public class Screen extends JPanel{
 					.addComponent(panel, GroupLayout.DEFAULT_SIZE, 740, Short.MAX_VALUE)
 					.addGap(18)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(panel_button_share, GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
 						.addComponent(panel_button_voice, GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
-						.addComponent(bt_share, GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
-						.addComponent(bt_leave, GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE))
+						.addComponent(bt_leave, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE))
 					.addGap(23))
 		);
-		panel_button_voice.setLayout(new CardLayout(0, 0));
 		
-		JButton bt_on = new JButton("ON");
-		panel_button_voice.add(bt_on, "ON");
+		cardLayout_share = new CardLayout(0, 0);
+		panel_button_share.setLayout(cardLayout_share);
+		
+		JButton bt_on_share = new JButton("ON SHARE");
+		bt_on_share.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+                SwingUtilities.invokeLater(() -> {
+                    cardLayout_share.next(panel_button_share);
+                    Service.getInstance().setOn_img(true);            
+                });			
+			}
+		});
+		panel_button_share.add(bt_on_share, "bt_on_share");
+		
+		JButton bt_off_share = new JButton("OFF SHARE");
+		panel_button_share.add(bt_off_share, "bt_off_share");
+		bt_off_share.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+	              SwingUtilities.invokeLater(() -> {
+	                    cardLayout_share.next(panel_button_share);
+	                    Service.getInstance().setOn_img(false);
+	                });
+			}
+		});
+		
+		cardLayout_mic = new CardLayout(0, 0);
+		panel_button_voice.setLayout(cardLayout_mic);
+		
+		JButton bt_on_mic = new JButton("ON MIC");
+		bt_on_mic.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cardLayout_mic.next(panel_button_voice);
+				Service.getInstance().setOn_mic(true);
+				Service.getInstance().setOn_loa(false);
+			}
+		});
+		panel_button_voice.add(bt_on_mic, "bt_on_mic");
 		setLayout(groupLayout);
 		
-		JButton bt_off= new JButton("OFF");
-		panel_button_voice.add(bt_off, "OFF");
+		JButton bt_off_mic= new JButton("OFF MIC");
+		bt_off_mic.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cardLayout_mic.next(panel_button_voice);
+				Service.getInstance().setOn_loa(true);
+				Service.getInstance().setOn_mic(false);
+			}
+		});
+		panel_button_voice.add(bt_off_mic, "bt_off_mic");
 	}
 
 	public JPanel getPanel() {
 		return panel;
 	}
-	
 }

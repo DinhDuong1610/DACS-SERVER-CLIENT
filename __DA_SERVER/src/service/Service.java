@@ -152,19 +152,34 @@ public class Service {
     	            if(message.isAction()) {
         	            Model_User_Account account = serviceUser.loadLogin();
         	            broadcast(client.getUserId(), account.toJsonObject("loadLogin"));
+        	            client.setUserId(account.getUser_Id()+"");
+        	            
+        	            List<Model_Project> list2 = serviceCommunity.getProject(Integer.parseInt(client.getUserId()));
+        	            JSONArray jsonArray2 = new JSONArray();
+        	            for(Model_Project pro : list2) {    	    
+        	            	jsonArray2.put(pro.toJsonObject("listProject"));
+        	            	textArea.append("list project :" +  pro.toJsonObject("listProject") + "\n");
+        	            }
+        	            JSONObject json2 = new JSONObject();
+        	            json2.put("type", "listProject");
+        	            json2.put("jsonArray", jsonArray2);
+    	            	broadcast(client.getUserId(), json2);
         	            
         	            List<Model_User_Account> list = serviceUser.getUser();
         	            if(list.size() == 0) textArea.append("rong!!!!");
-        	            for(Model_User_Account user : list) {    	    
-//        	            	if(serviceUser.checkContact(user.getUser_Id())) {
-        	            		broadcast(client.getUserId(), user.toJsonObject("list_user"));
-//        	            	}
-//        	            	textArea.append("list user :" +  user.toJsonObject("list_user") + "\n");
+        	            JSONArray jsonArray = new JSONArray();
+        	            for(Model_User_Account user : list) { 
+        	            	jsonArray.put(user.toJsonObject("list_user"));
+        	            	textArea.append("list user :" +  user.toJsonObject("list_user") + "\n");
         	            }
-        	            client.setUserId(account.getUser_Id()+"");
-        	            textArea.append("check Login :" + message.isAction() + "message:" + message.getMessage() );
-    	            }
-    	            
+        	            JSONObject json = new JSONObject();
+        	            json.put("type", "list_user");
+        	            json.put("jsonArray", jsonArray);
+    	            	broadcast(client.getUserId(), json);
+//        	            client.setUserId(account.getUser_Id()+"");
+        	                    	            
+        	            textArea.append("\ncheck Login :" + message.isAction() + "message:" + message.getMessage() );    	            
+    	            }    	            
     	    	}
     			else if(jsonData.getString("type").equals("sendMessage")) {
     			    int fromUserID = jsonData.getInt("fromUserID");
@@ -182,8 +197,7 @@ public class Service {
     				int user_Id2 = jsonData.getInt("user_Id2");
 	            	textArea.append("historyMessage :" +  client.getUserId() + " - " + user_Id2 +  "\n");
 	            	String history = serviceMessage.historyMessage(user_Id2);
-    	            broadcastHistory(client.getUserId(), history);
-    	            
+    	            broadcastHistory(client.getUserId(), history);    	            
     			}
     			else if(jsonData.getString("type").equals("addProject")) {
     				String projectName = jsonData.getString("projectName");
@@ -192,13 +206,16 @@ public class Service {
     	            textArea.append("Add project :" + project.toJsonObject("addProject") + "\n");    	           
     			}
     			else if(jsonData.getString("type").equals("listProject")) {
-	            	textArea.append("list project :" +  jsonData + "\n");
-    	            List<Model_Project> list = serviceCommunity.getProject(Integer.parseInt(client.getUserId()));
-    	            if(list.size() == 0) textArea.append("rong!!!!");
-    	            for(Model_Project pro : list) {    	    
-    	            	broadcast(client.getUserId(), pro.toJsonObject("listProject"));
+    	            List<Model_Project> list2 = serviceCommunity.getProject(Integer.parseInt(client.getUserId()));
+    	            JSONArray jsonArray2 = new JSONArray();
+    	            for(Model_Project pro : list2) {    	    
+    	            	jsonArray2.put(pro.toJsonObject("listProject"));
     	            	textArea.append("list project :" +  pro.toJsonObject("listProject") + "\n");
     	            }
+    	            JSONObject json2 = new JSONObject();
+    	            json2.put("type", "listProject");
+    	            json2.put("jsonArray", jsonArray2);
+	            	broadcast(client.getUserId(), json2);
     	            textArea.append("list project DONE \n");
     			}
     			else if(jsonData.getString("type").equals("postNews")) {
@@ -275,13 +292,18 @@ public class Service {
     	            textArea.append("Add calendar :" + item.toJsonObject("addCalendar") + "\n");
     			}
     			else if(jsonData.getString("type").equals("listCalendar")) {
-	            	textArea.append("list calendar :" +  jsonData + "\n");
+	            	textArea.append("list calendar :" +  jsonData + "\n");	            	            	
     	            List<Model_Calendar> list = serviceCalendar.getCalendar(Integer.parseInt(client.getUserId()));
     	            if(list.size() == 0) textArea.append("rong!!!!");
-    	            for(Model_Calendar item : list) {    	    
-    	            	broadcast(client.getUserId(), item.toJsonObject("listCalendar"));
+    	            JSONArray jsonArray = new JSONArray();
+    	            for(Model_Calendar item : list) {  
+    	            	jsonArray.put(item.toJsonObject("listCalendar"));
     	            	textArea.append("list project :" +  item.toJsonObject("listProject") + "\n");
-    	            }
+    	            }    	            
+    	            JSONObject json = new JSONObject();
+    	            json.put("type", "listCalendar");
+    	            json.put("jsonArray", jsonArray);
+	            	broadcast(client.getUserId(), json);
     	            textArea.append("list calendar DONE \n");
     			}
     			else if(jsonData.getString("type").equals("openMeeting")) {
@@ -311,7 +333,7 @@ public class Service {
         }
     }
     
-    public void broadcast(String userId, JSONObject jsonData) {
+    public synchronized void broadcast(String userId, JSONObject jsonData) {
 //    	new Thread(()-> {
             for (ClientHandler client : clients) {
                 if(client.getUserId().equals(userId)) {
@@ -443,7 +465,8 @@ public class Service {
 //    	        	            textArea.append(audioData+"\n");
     	        	        }
     	        	    } catch (IOException e) {
-    	        	        e.printStackTrace();
+    	        	    	e.printStackTrace();
+    	        	    	break;
     	        	    }
     	                
     	                
@@ -451,6 +474,7 @@ public class Service {
 //    	                textArea.append("#" + i++);
     	            } catch (IOException e) {
     	                e.printStackTrace();
+    	                break;
     	            }
     	        }
 			} catch (Exception e2) {

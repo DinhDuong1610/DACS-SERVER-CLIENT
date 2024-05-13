@@ -57,7 +57,7 @@ public class Login extends JPanel {
                     @Override
                     public void run() {
                         PublicEvent.getInstance().getEventMain().initChat();
-                        Service.getInstance().listProject();
+//                        Service.getInstance().listProject();
                         setVisible(false);
                         frameParent.dispose();
                     }

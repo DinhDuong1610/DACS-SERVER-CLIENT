@@ -32,6 +32,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.TargetDataLine;
+import javax.swing.SwingUtilities;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,6 +62,12 @@ public class Service {
 	private Model_Message model_message;
 	private Login login;
 	private MainUI main;
+	public volatile boolean on_mic = true;
+	public volatile boolean on_loa = true;
+	private volatile boolean on_img = false;
+	private Thread thread_loa;
+	private Thread thread_mic;
+	private Thread thread_img;
 	
 	public static Service getInstance(MainUI main) {
 		if(instance == null) {
@@ -187,11 +194,14 @@ public class Service {
 	            main.loadUser(user);
 	    	}
 	    	else if(jsonData.getString("type").equals("list_user")) {
-//	    		System.out.println("list_user: " + jsonData);
-	    		Model_User_Account list_user = new Model_User_Account(jsonData);
-	    		if(!list_user.getUserName().equals(user.getUserName())) {
-	    			PublicEvent.getInstance().getEventMenuLeft().newUser(list_user);
-	    		}
+	    		JSONArray jsonArray = jsonData.getJSONArray("jsonArray");
+	            for (int i = 0; i < jsonArray.length(); i++) {
+	                JSONObject json = jsonArray.getJSONObject(i);
+	                Model_User_Account list_user = new Model_User_Account(json);
+		    		if(!list_user.getUserName().equals(user.getUserName())) {
+		    			PublicEvent.getInstance().getEventMenuLeft().newUser(list_user);
+		    		}	            
+		    	}
 	    	}
 	    	else if(jsonData.getString("type").equals("receiveMessage")) {
                 Model_Receive_Message message = new Model_Receive_Message(jsonData);
@@ -205,9 +215,13 @@ public class Service {
 	    		Model_Project project = new Model_Project(jsonData);
 	    		main.getHome_community().getMenuLeft().addProject(project);
 	    	}
-	    	else if(jsonData.getString("type").equals("listProject")) {
-	    		Model_Project project = new Model_Project(jsonData);
-	    		main.getHome_community().getMenuLeft().addProject(project);
+	    	else if(jsonData.getString("type").equals("listProject")) {	    	
+	    		JSONArray jsonArray = jsonData.getJSONArray("jsonArray");
+	            for (int i = 0; i < jsonArray.length(); i++) {
+	                JSONObject json = jsonArray.getJSONObject(i);
+	                Model_Project project = new Model_Project(json);
+	                main.getHome_community().getMenuLeft().addProject(project);
+		    	}
 	    	}
 	    	else if(jsonData.getString("type").equals("postNews")) {
 	    		Model_Post post = new Model_Post(jsonData);
@@ -230,8 +244,12 @@ public class Service {
 	    		main.getHome_community().getBody().getMember().addMember(user);
 	    	}
 	    	else if(jsonData.getString("type").equals("listCalendar")) {
-	    		Model_Calendar item = new Model_Calendar(jsonData);
-	    		main.getCalendarUI().addCalendarFromServer(item);
+	    		JSONArray jsonArray = jsonData.getJSONArray("jsonArray");
+	            for (int i = 0; i < jsonArray.length(); i++) {
+	                JSONObject json = jsonArray.getJSONObject(i);
+	                Model_Calendar item = new Model_Calendar(json);
+	                main.getCalendarUI().addCalendarFromServer(item);
+		    	}
 	    	}
 	    	else if(jsonData.getString("type").equals("addMeeting")) {
 	    		Model_Meeting meeting = new Model_Meeting(jsonData);
@@ -253,9 +271,8 @@ public class Service {
     }
     
 	public void listenImage(BufferedImage img) {
-		main.getHome_community().getMeeting_room().getScreen().getPanel().getGraphics().drawImage(img, 0, 0, main.getHome_community().getMeeting_room().getScreen().getPanel().getWidth(), main.getHome_community().getMeeting_room().getScreen().getPanel().getHeight(), null);
+	        main.getHome_community().getMeeting_room().getScreen().getPanel().getGraphics().drawImage(img, 0, 0, main.getHome_community().getMeeting_room().getScreen().getPanel().getWidth(), main.getHome_community().getMeeting_room().getScreen().getPanel().getHeight(), null);
 	}
-	
 	public static AudioFormat getaudioformat() {
 		float sampleRate = 8000.0F;
 		int sampleSizeInbits = 16;
@@ -287,21 +304,24 @@ public class Service {
         		dout = new DatagramSocket(UDP_PORT);
         		
         		byte byte_buff[] = new byte[512];
-        		new Thread(()-> {
-                    while (true) {
+        		thread_mic = new Thread(()-> {
+                    while (on_mic) {
                     	int i = 0;
                         try {
                             audio_in.read(byte_buff, 0, byte_buff.length);
                             DatagramPacket data = new DatagramPacket(byte_buff, byte_buff.length, inet, UDP_PORT_SERVER);
-//                            System.out.println("Send #" + i++);
+                            System.out.println(user.getUserName() + " mic");
                             dout.send(data);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }       			                    
-        		}).start();
+        		});
+//        		thread_mic.start();
+//        		synchronized (thread_mic) {
+//        			thread_mic.wait();
+//				}
   
-        		
        			AudioFormat format2 = getaudioformat();
     			DataLine.Info info_out = new DataLine.Info(SourceDataLine.class, format2);
     			if (!AudioSystem.isLineSupported(info_out)) {
@@ -314,17 +334,22 @@ public class Service {
         		byte[] buffer = new byte[512];
                 DatagramPacket incoming = new DatagramPacket(buffer, buffer.length);
                 System.out.println("haha");
-                while (true) {
-                    try {
-                        dout.receive(incoming);
-                        buffer = incoming.getData();
-//                        System.out.println(buffer);
-                        // Phát dữ liệu âm thanh từ server ra loa
-                        audio_out.write(buffer, 0, buffer.length);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                
+                thread_loa = new Thread(()->{
+                    while (true) {
+                        try {
+                            dout.receive(incoming);
+                            byte [] audio = incoming.getData();
+//                            System.out.println(buffer);
+                            // Phát dữ liệu âm thanh từ server ra loa
+//                            audio_out.write(audio, 0, audio.length);
+                            loa(audio_out, audio);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
-                }
+                });
+                thread_loa.start();
                 
 			} catch (Exception e2) {
 				e2.printStackTrace();
@@ -342,8 +367,9 @@ public class Service {
     			InetAddress inet = InetAddress.getByName("localhost");
     			dout = new DatagramSocket(UDP_PORT);        		
                 
-		        new Thread(() -> {
-					while(true) {
+		        thread_img = new Thread(() -> {
+					while(on_img) {
+						System.out.println(user.getUserName() + " img");
 						try {
 							Robot rob = new Robot();  
 							Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
@@ -376,13 +402,17 @@ public class Service {
 							e1.printStackTrace();
 						}
 	                    try {
-	                        Thread.sleep(500);
+	                        Thread.sleep(100);
 	                    } catch (Exception e1) {
 	                    	e1.printStackTrace();
 	                    }
 					}
-
-		        }).start();
+		        });
+		        
+//		        thread_img.start();
+//		        synchronized (thread_img) {
+//		        	thread_img.wait();
+//				}
     			
     			while (true) {
                     try {
@@ -403,6 +433,13 @@ public class Service {
 				e.printStackTrace();
 			}
         }).start();
+	}
+	
+	public void loa(SourceDataLine audio_out, byte[] audio) {
+		if(true) {
+			System.out.println(user.getUserName() + " loa");
+			audio_out.write(audio, 0, audio.length);
+		}
 	}
 	
 	public void share(BufferedImage img) {
@@ -710,8 +747,94 @@ public class Service {
 	public MainUI getMain() {
 		return main;
 	}
-	
-	
 
+	public boolean isOn_mic() {
+		return on_mic;
+	}
+
+	public void setOn_mic(boolean on_mic) {
+		this.on_mic = on_mic;
+		if(on_mic) {
+			if(thread_mic != null && thread_mic.getState() != Thread.State.NEW) {
+				synchronized (thread_mic) {
+					thread_mic.notify();
+				}
+			}
+			else {
+				thread_mic.start();
+			}
+
+		}
+		else {
+			try {
+				synchronized (thread_mic) {
+					thread_mic.wait();
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public boolean isOn_loa() {
+		return on_loa;
+	}
+
+	public void setOn_loa(boolean on_loa) {
+		this.on_loa = on_loa;
+//		if(on_loa) {
+//			synchronized (thread_loa) {
+//				thread_loa.notify();
+//			}
+//		}
+//		else {
+//			try {
+//				synchronized (thread_loa) {
+//					thread_loa.wait();
+//				}
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//		}
+	}
+
+	public boolean isOn_img() {
+		return on_img;
+	}
+
+	public void setOn_img(boolean on_img) {
+		this.on_img = on_img;
+		if(on_img) {
+			if(thread_img != null && thread_img.getState() != Thread.State.NEW) {
+				synchronized (thread_img) {
+					thread_img.notify();
+				}
+			}
+			else {
+				thread_img.start();
+			}
+		}
+		else {
+			try {
+				synchronized (thread_img) {
+					thread_img.wait();
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public Thread getThread_loa() {
+		return thread_loa;
+	}
+
+	public Thread getThread_mic() {
+		return thread_mic;
+	}
+
+	public Thread getThread_img() {
+		return thread_img;
+	}
 
 }

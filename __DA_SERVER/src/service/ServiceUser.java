@@ -19,7 +19,7 @@ import model.Model_Register;
 import model.Model_User_Account;
 
 public class ServiceUser {
-    private final String SELECT_USER_ACCOUNT = "select User_ID, UserName,fullName, Email, Phone, Address, Avatar_path from user_account LIMIT 3";
+    private final String SELECT_USER_ACCOUNT = "select User_ID, UserName,fullName, Email, Phone, Address, Avatar_path from user_account limit 3"; // limit 3
     private final String INSERT_USER = "insert into user (UserName, `Password`) values (?,?)";
     private final String INSERT_USER_ACCOUNT = "insert into user_account (User_ID, UserName, fullName, Email, Phone, Address, Avatar_path, status) values (? ,? , ?, ?, ?, ?, ?, 1)";
     private final String CHECK_USER = "select User_ID from user where UserName =? limit 1";

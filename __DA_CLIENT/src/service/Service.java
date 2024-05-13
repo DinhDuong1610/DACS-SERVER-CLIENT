@@ -1,5 +1,6 @@
 package service;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.Robot;
@@ -287,6 +288,18 @@ public class Service {
     				user.setStatus(true);
     				main.getHome_community().getMeeting_room().getMenuLeft().newUser(user);
 	    	}
+	    	else if(jsonData.getString("type").equals("leaveMeeting")) {   				
+    			if(main.getHome_community().getMeeting_room().getMeetingId() == jsonData.getInt("meetingId")) {
+    				main.getHome_community().getMeeting_room().getMenuLeft().userLeave(jsonData.getInt("userId"));    				
+    			}
+	    	}
+	    	else if(jsonData.getString("type").equals("stopShare")) {   				
+    			if(main.getHome_community().getMeeting_room().getMeetingId() == jsonData.getInt("meetingId")) {
+    				main.getHome_community().getMeeting_room().getScreen().getPanel().getGraphics().clearRect(0, 0, main.getHome_community().getMeeting_room().getScreen().getPanel().getWidth(), main.getHome_community().getMeeting_room().getScreen().getPanel().getHeight());
+    				main.getHome_community().getMeeting_room().getScreen().getPanel().setBackground(Color.black);   				
+    			}
+	    	}
+
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -305,8 +318,8 @@ public class Service {
 	}
 	
 	
-	public void listenMeeting(int userId, int meetingId, DatagramSocket out1, DatagramSocket out2) {
-        new Thread(() -> {
+	public void listenMeeting(int userId, int meetingId, DatagramSocket out1, DatagramSocket out2) {				
+		new Thread(() -> {
         	int UDP_PORT = userId;
         	int UDP_PORT_SERVER = meetingId;
         	TargetDataLine audio_in;
@@ -760,12 +773,51 @@ public class Service {
         }).start(); 
     }
     
+    public void leaveMeeting(int meetingId, int userId, int projectId) {
+    	JSONObject json = new JSONObject();
+		try {
+			json.put("type", "leaveMeeting");
+			json.put("meetingId", meetingId);
+			json.put("projectId", projectId);
+			json.put("userId", userId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        new Thread(() -> {
+            try {
+    			out.writeBytes(json.toString() + "\n");
+    			out.flush();
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+        }).start(); 
+    }
+    
     public void joinedMeeting(int userId, int newUserId) {
     	JSONObject json = new JSONObject();
 		try {
 			json.put("type", "joinedMeeting");
 			json.put("userId", userId);
 			json.put("newUserId", newUserId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        new Thread(() -> {
+            try {
+    			out.writeBytes(json.toString() + "\n");
+    			out.flush();
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+        }).start(); 
+    }
+    
+    public void stopShare(int meetingId, int projectId) {
+    	JSONObject json = new JSONObject();
+		try {
+			json.put("type", "stopShare");
+			json.put("meetingId", meetingId);
+			json.put("projectId", projectId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

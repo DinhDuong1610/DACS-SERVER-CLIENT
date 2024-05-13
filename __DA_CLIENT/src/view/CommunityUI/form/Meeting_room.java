@@ -1,8 +1,11 @@
 package view.CommunityUI.form;
 
 import java.awt.EventQueue;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.net.DatagramSocket;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -68,6 +71,15 @@ public class Meeting_room extends JFrame {
 		panel_main.add(screen);
 		
 		setVisible(true);
+		
+//		BufferedImage img = null;
+//		try {
+//			img = ImageIO.read(getClass().getResource("/images/testing/avatar.png"));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}		
+//		screen.getPanel().getGraphics().drawImage(img, 0, 0, screen.getPanel().getWidth(), screen.getPanel().getHeight(), null);
+//		
 	}
 
 	public int getProject() {

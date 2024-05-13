@@ -1,6 +1,7 @@
 package view.CommunityUI.form;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -74,6 +75,21 @@ public class MenuLeft_Room extends JPanel{
 		  panel_menu_list.add(new Item_People(d), "width 296:296:296, height 50:50:50, wrap");
 		  panel_menu_list.repaint();
 		  panel_menu_list.revalidate();
+	}
+	 
+	public void userLeave(int userId) {
+		Component[] components = panel_menu_list.getComponents();
+		for (Component component : components) {
+		    if (component instanceof Item_People) {
+		        Item_People item = (Item_People) component;
+		        if(item.getUser().getUser_Id() == userId) {
+		        	panel_menu_list.remove(item);
+			  		panel_menu_list.repaint();
+					panel_menu_list.revalidate();
+		        	break;
+		        }
+		    }
+		}
 	}
 	
 	public void showPeople() {

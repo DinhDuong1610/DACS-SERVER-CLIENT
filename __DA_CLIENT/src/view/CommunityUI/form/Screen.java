@@ -6,6 +6,7 @@ import javax.swing.SwingUtilities;
 import model.community.Model_Project;
 import service.Service;
 
+import javax.imageio.ImageIO;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 
@@ -18,6 +19,7 @@ import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.net.DatagramSocket;
 import java.awt.event.ActionEvent;
 
@@ -36,16 +38,17 @@ public class Screen extends JPanel{
 		this.dout2 = dout2;
 		this.meeting_room = meeting_room;
 		
-		setBackground(new Color(169, 169, 169));
-		
 		panel = new JPanel();
-		
+		panel.setBackground(Color.black);
+		setBackground(new Color(169, 169, 169));
+
 		JButton bt_leave = new JButton("LEAVE");
 		bt_leave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dout.close();
 				dout2.close();
 				meeting_room.dispose();
+				Service.getInstance().leaveMeeting(meeting_room.getMeetingId(), Service.getInstance().getUser().getUser_Id(), meeting_room.getProject());
 			}
 		});
 		
@@ -102,6 +105,7 @@ public class Screen extends JPanel{
 	              SwingUtilities.invokeLater(() -> {
 	                    cardLayout_share.next(panel_button_share);
 	                    Service.getInstance().setOn_img(false);
+	                    Service.getInstance().stopShare(meeting_room.getMeetingId(), meeting_room.getProject());
 	                });
 			}
 		});

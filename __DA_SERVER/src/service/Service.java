@@ -343,6 +343,38 @@ public class Service {
     	    		} 	    
     	            	broadcastMessage(jsonData.getInt("newUserId") + "", json);
     			}
+    			else if(jsonData.getString("type").equals("leaveMeeting")) {
+    	            List<Model_User_Account> list = serviceCommunity.getMember(jsonData.getInt("projectId"));
+    	            if(list.size() == 0) textArea.append("rong!!!!");
+    	        	JSONObject json = new JSONObject();
+    	    		try {
+    	    			json.put("type", "leaveMeeting");
+    	    			json.put("meetingId", jsonData.getInt("meetingId"));
+    	    			json.put("projectId", jsonData.getInt("projectId"));
+    	    			json.put("userId", jsonData.getInt("userId"));
+    	    		} catch (Exception e) {
+    	    			e.printStackTrace();
+    	    		}
+    	            for(Model_User_Account user : list) {    	    
+    	            	broadcastMessage(user.getUser_Id()+"", json);
+    	            	textArea.append("new user leave :" +  json + "\n");
+    	            };
+    			}
+    			else if(jsonData.getString("type").equals("stopShare")) {
+    	            List<Model_User_Account> list = serviceCommunity.getMember(jsonData.getInt("projectId"));
+    	            if(list.size() == 0) textArea.append("rong!!!!");
+    	        	JSONObject json = new JSONObject();
+    	    		try {
+    	    			json.put("type", "stopShare");
+    	    			json.put("meetingId", jsonData.getInt("meetingId"));
+    	    			json.put("projectId", jsonData.getInt("projectId"));
+    	    		} catch (Exception e) {
+    	    			e.printStackTrace();
+    	    		}
+    	            for(Model_User_Account user : list) {    	    
+    	            	broadcastMessage(user.getUser_Id()+"", json);
+    	            };
+    			}
 
     		} catch (JSONException e) {
     			textArea.append("server nhan: " + data + "\n");

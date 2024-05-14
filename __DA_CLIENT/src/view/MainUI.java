@@ -221,6 +221,7 @@ public class MainUI extends JFrame {
 		panel_card_user.setLayout(cardLayout_User);
 		// <Panel_card_user_view>
 		panel_card_user_view = new JPanel();
+		panel_card_user_view.setBackground(new Color(232, 246, 253));
 		panel_card_user_view.setLayout(null);
 		panel_card_user.add(panel_card_user_view, "panel_card_user_view");
 		
@@ -257,6 +258,7 @@ public class MainUI extends JFrame {
 		panel_card_user_view.add(label_user_DiaChi);
 		
 		tf_user_TenTaiKhoan = new JTextField();
+		tf_user_TenTaiKhoan.setBackground(new Color(255, 255, 255));
 		tf_user_TenTaiKhoan.setEditable(false);
 		tf_user_TenTaiKhoan.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		tf_user_TenTaiKhoan.setColumns(10);
@@ -264,6 +266,7 @@ public class MainUI extends JFrame {
 		panel_card_user_view.add(tf_user_TenTaiKhoan);
 		
 		tf_user_HoVaTen = new JTextField();
+		tf_user_HoVaTen.setBackground(new Color(255, 255, 255));
 		tf_user_HoVaTen.setEditable(false);
 		tf_user_HoVaTen.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		tf_user_HoVaTen.setColumns(10);
@@ -271,6 +274,7 @@ public class MainUI extends JFrame {
 		panel_card_user_view.add(tf_user_HoVaTen);
 		
 		tf_user_email = new JTextField();
+		tf_user_email.setBackground(new Color(255, 255, 255));
 		tf_user_email.setEditable(false);
 		tf_user_email.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		tf_user_email.setColumns(10);
@@ -278,6 +282,7 @@ public class MainUI extends JFrame {
 		panel_card_user_view.add(tf_user_email);
 		
 		tf_user_sdt = new JTextField();
+		tf_user_sdt.setBackground(new Color(255, 255, 255));
 		tf_user_sdt.setEditable(false);
 		tf_user_sdt.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		tf_user_sdt.setColumns(10);
@@ -315,6 +320,7 @@ public class MainUI extends JFrame {
 		
 		
 		panel_card_user_edit = new JPanel();
+		panel_card_user_edit.setBackground(new Color(232, 246, 253));
 		panel_card_user_edit.setLayout(null);
 		panel_card_user.add(panel_card_user_edit, "panel_card_user_edit");
 		
@@ -351,6 +357,7 @@ public class MainUI extends JFrame {
 		panel_card_user_edit.add(label_user_DiaChi_1);
 		
 		tf_user_TenTaiKhoan_edit = new JTextField();
+		tf_user_TenTaiKhoan_edit.setBackground(new Color(255, 255, 255));
 		tf_user_TenTaiKhoan_edit.setEditable(false);
 		tf_user_TenTaiKhoan_edit.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		tf_user_TenTaiKhoan_edit.setColumns(10);
@@ -595,7 +602,7 @@ public class MainUI extends JFrame {
 		tf_user_email.setText(account.getEmail());
 		tf_user_sdt.setText(account.getPhone());
 		ta_DiaChi.setText(account.getAddress());
-		lb_tenTaiKhoan.setText(account.getUserName());
+		lb_tenTaiKhoan.setText(account.getFullName());
 		if(!account.getAvatar_path().isEmpty()) {
 			
 			imagePath = account.getAvatar_path();
@@ -618,7 +625,7 @@ public class MainUI extends JFrame {
 		tf_user_email.setText(tf_user_email_edit.getText());
 		tf_user_sdt.setText(tf_user_sdt_edit.getText());
 		ta_DiaChi.setText(ta_DiaChi_edit.getText());
-		lb_tenTaiKhoan.setText(tf_user_TenTaiKhoan_edit.getText());
+		lb_tenTaiKhoan.setText(tf_user_HoVaTen_edit.getText());
 		label_user_avatar.setIcon(new ImageIcon(ImageDecoder.decodeStringToImageIcon(user.getAvatar_path()).getImage().getScaledInstance(label_user_avatar.getWidth(), label_user_avatar.getHeight(), Image.SCALE_SMOOTH)));
 	}
 	

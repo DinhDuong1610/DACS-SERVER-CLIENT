@@ -64,6 +64,14 @@ public class MenuLeft_Room extends JPanel{
 		bt_chatGroup.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cardLayout.show(cardPanel, "chat");
+				cardLayout.show(cardPanel, "member");
+				cardLayout.show(cardPanel, "chat");
+				cardLayout.show(cardPanel, "member");
+				cardLayout.show(cardPanel, "chat");
+				cardLayout.show(cardPanel, "member");
+				cardLayout.show(cardPanel, "chat");
+				cardLayout.show(cardPanel, "member");
+				cardLayout.show(cardPanel, "chat");
 			}
 		});
 		panel_menu.add(bt_chatGroup);
@@ -100,6 +108,10 @@ public class MenuLeft_Room extends JPanel{
 //            }
 //        });
 		
+		chat_meeting = new Chat_meeting(meeting_room);
+		cardPanel.add(chat_meeting, "chat");
+		
+		
 		JScrollPane jScrollPane = new JScrollPane(panel_menu_list);
 		jScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		cardPanel.add(jScrollPane, "member");		
@@ -107,10 +119,8 @@ public class MenuLeft_Room extends JPanel{
 		setBackground(Color.blue);
 		panel_menu_list.removeAll();
 		
-		
-		chat_meeting = new Chat_meeting(meeting_room);
-		cardPanel.add(chat_meeting, "chat");
-		cardPanel.repaint();
+		cardLayout.show(cardPanel, "member");
+
 				
 		add(cardPanel);
 	}

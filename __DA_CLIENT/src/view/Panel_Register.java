@@ -28,7 +28,6 @@ public class Panel_Register extends JPanel{
 	private JTextField tf_user_email;
 	private JTextField tf_user_sdt;
 	private JScrollPane scrollPane;
-	private JLabel lb_tenTaiKhoan;
 	private JLabel lblNewLabel;
 	private JButton bt_chonAnh;
 	private JButton bt_save;
@@ -42,78 +41,73 @@ public class Panel_Register extends JPanel{
 		setLayout(null);
 		
 		label_user_avatar = new JLabel("");
-		label_user_avatar.setIcon(new ImageIcon((new ImageIcon((MainUI.class.getResource("/images/icon/default.jpeg"))).getImage().getScaledInstance(350, 350, Image.SCALE_SMOOTH))));
+		label_user_avatar.setIcon(new ImageIcon((new ImageIcon((MainUI.class.getResource("/images/background/avatar.jpg"))).getImage().getScaledInstance(350, 350, Image.SCALE_SMOOTH))));
 		label_user_avatar.setBounds(83, 87, 350, 350);
 		add(label_user_avatar);
 		
 		label_user_TenTaiKhoan = new JLabel("TÊN TÀI KHOẢN");
-		label_user_TenTaiKhoan.setFont(new Font("Tahoma", Font.BOLD, 25));
+		label_user_TenTaiKhoan.setFont(new Font("Segoe UI", Font.BOLD, 26));
 		label_user_TenTaiKhoan.setBounds(503, 87, 217, 48);
 		add(label_user_TenTaiKhoan);
 		
 		label_user_HoVaTen = new JLabel("HỌ VÀ TÊN");
-		label_user_HoVaTen.setFont(new Font("Tahoma", Font.BOLD, 25));
+		label_user_HoVaTen.setFont(new Font("Segoe UI", Font.BOLD, 26));
 		label_user_HoVaTen.setBounds(503, 145, 217, 48);
 		add(label_user_HoVaTen);
 		
 		label_user_email = new JLabel("EMAIL");
-		label_user_email.setFont(new Font("Tahoma", Font.BOLD, 25));
+		label_user_email.setFont(new Font("Segoe UI", Font.BOLD, 26));
 		label_user_email.setBounds(503, 203, 217, 48);
 		add(label_user_email);
 		
 		label_user_sdt = new JLabel("SỐ ĐIỆN THOẠI");
-		label_user_sdt.setFont(new Font("Tahoma", Font.BOLD, 25));
+		label_user_sdt.setFont(new Font("Segoe UI", Font.BOLD, 26));
 		label_user_sdt.setBounds(503, 261, 217, 48);
 		add(label_user_sdt);
 		
 		label_user_DiaChi = new JLabel("ĐỊA CHỈ");
-		label_user_DiaChi.setFont(new Font("Tahoma", Font.BOLD, 25));
+		label_user_DiaChi.setFont(new Font("Segoe UI", Font.BOLD, 26));
 		label_user_DiaChi.setBounds(503, 319, 217, 48);
 		add(label_user_DiaChi);
 		
 		tf_user_TenTaiKhoan = new JTextField(userName);
-		tf_user_TenTaiKhoan.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		tf_user_TenTaiKhoan.setFont(new Font("Segoe UI", Font.PLAIN, 26));
 		tf_user_TenTaiKhoan.setColumns(10);
 		tf_user_TenTaiKhoan.setBounds(745, 87, 575, 48);
 		add(tf_user_TenTaiKhoan);
 		
 		tf_user_HoVaTen = new JTextField();
-		tf_user_HoVaTen.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		tf_user_HoVaTen.setFont(new Font("Segoe UI", Font.PLAIN, 26));
 		tf_user_HoVaTen.setColumns(10);
 		tf_user_HoVaTen.setBounds(745, 145, 575, 48);
 		add(tf_user_HoVaTen);
 		
 		tf_user_email = new JTextField();
-		tf_user_email.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		tf_user_email.setFont(new Font("Segoe UI", Font.PLAIN, 26));
 		tf_user_email.setColumns(10);
 		tf_user_email.setBounds(745, 203, 575, 48);
 		add(tf_user_email);
 		
 		tf_user_sdt = new JTextField();
-		tf_user_sdt.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		tf_user_sdt.setFont(new Font("Segoe UI", Font.PLAIN, 26));
 		tf_user_sdt.setColumns(10);
 		tf_user_sdt.setBounds(745, 261, 575, 48);
 		add(tf_user_sdt);
 		
 		scrollPane = new JScrollPane();
+		scrollPane.setOpaque(false);
 		scrollPane.setBounds(745, 319, 575, 121);
 		add(scrollPane);
 		
 		JTextArea ta_DiaChi = new JTextArea();
 		ta_DiaChi.setWrapStyleWord(true);
 		ta_DiaChi.setLineWrap(true);
-		ta_DiaChi.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		ta_DiaChi.setFont(new Font("Segoe UI", Font.PLAIN, 26));
 		scrollPane.setViewportView(ta_DiaChi);
-		
-		lb_tenTaiKhoan = new JLabel("AVATAR");
-		lb_tenTaiKhoan.setHorizontalAlignment(SwingConstants.CENTER);
-		lb_tenTaiKhoan.setFont(new Font("Tahoma", Font.BOLD, 30));
-		lb_tenTaiKhoan.setBounds(83, 472, 350, 51);
-		add(lb_tenTaiKhoan);
 		
 		lblNewLabel = new JLabel("REGISTER");
 		lblNewLabel.setForeground(new Color(0, 0, 0));
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 40));
+		lblNewLabel.setFont(new Font("Segoe UI Black", Font.BOLD, 40));
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setBounds(518, 10, 437, 48);
 		add(lblNewLabel);
@@ -137,9 +131,11 @@ public class Panel_Register extends JPanel{
 				dialog.dispose();
 			}
 		});
-		bt_save.setFont(new Font("Tahoma", Font.BOLD, 25));
+		bt_save.setFont(new Font("Segoe UI Black", Font.BOLD, 27));
 		bt_save.setBounds(596, 487, 167, 51);
 		add(bt_save);
+		
+		this.setBackground(new Color(200, 195, 236));
 	}
 	
 

@@ -41,24 +41,25 @@ public class P_Register extends javax.swing.JPanel {
     	
         lbTitle = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel1.setFont(new Font("Tahoma", Font.PLAIN, 20));
+        jLabel1.setFont(new Font("Segoe UI", Font.BOLD, 18));
         txtUser = new javax.swing.JTextField();
-        txtUser.setFont(new Font("Tahoma", Font.PLAIN, 20));
+        txtUser.setFont(new Font("Segoe UI", Font.PLAIN, 20));
         jLabel2 = new javax.swing.JLabel();
-        jLabel2.setFont(new Font("Tahoma", Font.PLAIN, 20));
+        jLabel2.setFont(new Font("Segoe UI", Font.BOLD, 18));
         txtPass = new javax.swing.JPasswordField();
         txtPass.setFont(new Font("Tahoma", Font.PLAIN, 20));
         cmdRegister = new javax.swing.JButton();
         cmdRegister.setFont(new Font("Tahoma", Font.BOLD, 20));
+        cmdRegister.setIcon(new ImageIcon(getClass().getResource("/images/background/button_register.png")));
         cmdBackLogin = new javax.swing.JButton();
         txtRePassword = new javax.swing.JPasswordField();
         txtRePassword.setFont(new Font("Tahoma", Font.PLAIN, 20));
         jLabel3 = new javax.swing.JLabel();
-        jLabel3.setFont(new Font("Tahoma", Font.PLAIN, 20));
+        jLabel3.setFont(new Font("Segoe UI", Font.BOLD, 18));
 
         setBackground(new java.awt.Color(255, 255, 255));
 
-        lbTitle.setFont(new Font("SansSerif", Font.PLAIN, 40)); // NOI18N
+        lbTitle.setFont(new Font("Segoe UI", Font.BOLD, 40)); // NOI18N
         lbTitle.setForeground(new java.awt.Color(87, 87, 87));
         lbTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbTitle.setText("Register");
@@ -67,14 +68,14 @@ public class P_Register extends javax.swing.JPanel {
 
         jLabel2.setText("Password");
 
-        cmdRegister.setText("Register");
+//        cmdRegister.setText("Register");
         cmdRegister.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdRegisterActionPerformed(evt);
             }
         });
 
-        cmdBackLogin.setFont(new Font("SansSerif", Font.PLAIN, 14)); // NOI18N
+        cmdBackLogin.setFont(new Font("Segoe UI Emoji", Font.BOLD, 16)); // NOI18N
         cmdBackLogin.setForeground(new java.awt.Color(15, 128, 206));
         cmdBackLogin.setText("Back Login");
         cmdBackLogin.setContentAreaFilled(false);
@@ -88,72 +89,61 @@ public class P_Register extends javax.swing.JPanel {
         jLabel3.setText("Confirm Password");
         
         lbError = new JLabel("");
+        lbError.setFont(new Font("Segoe UI Symbol", Font.BOLD, 18));
         lbError.setForeground(Color.RED);
         lbError.setHorizontalAlignment(SwingConstants.CENTER);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         layout.setHorizontalGroup(
-        	layout.createParallelGroup(Alignment.LEADING)
+        	layout.createParallelGroup(Alignment.TRAILING)
         		.addComponent(lbTitle, GroupLayout.DEFAULT_SIZE, 354, Short.MAX_VALUE)
         		.addGroup(layout.createSequentialGroup()
-        			.addGap(18)
         			.addGroup(layout.createParallelGroup(Alignment.LEADING)
         				.addGroup(layout.createSequentialGroup()
-        					.addComponent(jLabel2, GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
-        					.addContainerGap())
-        				.addGroup(Alignment.TRAILING, layout.createSequentialGroup()
-        					.addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 306, GroupLayout.PREFERRED_SIZE)
-        					.addContainerGap(30, Short.MAX_VALUE))
-        				.addGroup(Alignment.TRAILING, layout.createSequentialGroup()
-        					.addComponent(txtUser, GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
-        					.addContainerGap())))
-        		.addGroup(Alignment.TRAILING, layout.createSequentialGroup()
-        			.addGap(18)
-        			.addComponent(txtPass, GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
-        			.addContainerGap())
-        		.addGroup(Alignment.TRAILING, layout.createSequentialGroup()
-        			.addGap(18)
-        			.addComponent(jLabel3, GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
-        			.addContainerGap())
-        		.addGroup(Alignment.TRAILING, layout.createSequentialGroup()
-        			.addGap(18)
-        			.addComponent(txtRePassword, GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
-        			.addContainerGap())
-        		.addGroup(Alignment.TRAILING, layout.createSequentialGroup()
-        			.addGap(18)
-        			.addComponent(cmdRegister, GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
-        			.addContainerGap())
-        		.addGroup(Alignment.TRAILING, layout.createSequentialGroup()
-        			.addGap(18)
-        			.addGroup(layout.createParallelGroup(Alignment.TRAILING)
-        				.addComponent(lbError, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
-        				.addComponent(cmdBackLogin, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE))
-        			.addContainerGap())
+        					.addGap(18)
+        					.addGroup(layout.createParallelGroup(Alignment.LEADING)
+        						.addComponent(lbError, GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
+        						.addGroup(layout.createSequentialGroup()
+        							.addGap(10)
+        							.addGroup(layout.createParallelGroup(Alignment.LEADING)
+        								.addComponent(cmdRegister, GroupLayout.PREFERRED_SIZE, 305, Short.MAX_VALUE)
+        								.addComponent(cmdBackLogin, GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE)))))
+        				.addGroup(layout.createSequentialGroup()
+        					.addGap(29)
+        					.addGroup(layout.createParallelGroup(Alignment.LEADING)
+        						.addComponent(txtRePassword, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE)
+        						.addComponent(jLabel3, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE)
+        						.addComponent(txtPass, GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE)
+        						.addComponent(jLabel2, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE)
+        						.addComponent(txtUser, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE)
+        						.addComponent(jLabel1, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE))
+        					.addPreferredGap(ComponentPlacement.RELATED)))
+        			.addGap(21))
         );
         layout.setVerticalGroup(
         	layout.createParallelGroup(Alignment.LEADING)
         		.addGroup(layout.createSequentialGroup()
-        			.addGap(20)
+        			.addGap(16)
         			.addComponent(lbTitle)
-        			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addComponent(jLabel1)
-        			.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        			.addComponent(txtUser, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE)
-        			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addComponent(jLabel2)
-        			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addComponent(txtPass, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
-        			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addComponent(jLabel3)
-        			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addComponent(txtRePassword, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)
+        			.addGap(18)
+        			.addComponent(jLabel1, GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+        			.addGap(2)
+        			.addComponent(txtUser, GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
         			.addPreferredGap(ComponentPlacement.UNRELATED)
-        			.addComponent(cmdRegister, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+        			.addComponent(jLabel2, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
         			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addComponent(cmdBackLogin)
+        			.addComponent(txtPass, GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+        			.addPreferredGap(ComponentPlacement.UNRELATED)
+        			.addComponent(jLabel3, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
         			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addComponent(lbError, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
-        			.addGap(45))
+        			.addComponent(txtRePassword, GroupLayout.PREFERRED_SIZE, 39, GroupLayout.PREFERRED_SIZE)
+        			.addGap(18)
+        			.addComponent(cmdRegister, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(cmdBackLogin, GroupLayout.PREFERRED_SIZE, 23, Short.MAX_VALUE)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(lbError, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
+        			.addGap(12))
         );
         this.setLayout(layout);
     }// </editor-fold>//GEN-END:initComponents
@@ -190,10 +180,11 @@ public class P_Register extends javax.swing.JPanel {
             
         	JDialog dialog = new JDialog();
         	Panel_Register register = new Panel_Register(dialog, txtUser.getText());
-    		dialog.setLayout(new GridLayout(1,1));
+    		dialog.getContentPane().setLayout(new GridLayout(1,1));
     		dialog.setSize(1400, 620);
+//    		dialog.setUndecorated(true);
     		dialog.setLocationRelativeTo(null);
-        	dialog.add(register);
+        	dialog.getContentPane().add(register);
         	dialog.setVisible(true);
         }
     }

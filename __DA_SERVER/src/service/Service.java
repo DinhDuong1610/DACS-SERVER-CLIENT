@@ -12,6 +12,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,7 +99,7 @@ public class Service {
                     textArea.append("One client connected\n");
                     
                     try {
-                        BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                        BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream() , StandardCharsets.UTF_8));
                         DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
                         InputStream in_image = clientSocket.getInputStream();
                         OutputStream out_image = clientSocket.getOutputStream();

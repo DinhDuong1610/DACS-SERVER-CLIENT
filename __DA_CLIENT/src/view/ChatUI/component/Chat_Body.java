@@ -168,7 +168,7 @@ public class Chat_Body extends javax.swing.JPanel {
         revalidate();
         item.setTime(data.getTime());
         updateScroll();
-//        scrollToBottom();
+        updateScroll();
     }
     
     public void addDate(String date) {

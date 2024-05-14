@@ -1,6 +1,14 @@
 package model.community;
 
+import java.nio.charset.StandardCharsets;
+
 import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class Model_Post {
 	private int postId;
@@ -43,7 +51,14 @@ public class Model_Post {
 			json.put("avatarPath", avatarPath);
 			json.put("timing", timing);
 			json.put("content", content);
-			return json;
+//			return json;
+			
+            // Chuyển đổi JSONObject thành chuỗi UTF-8
+            byte[] bytes = json.toString().getBytes(StandardCharsets.UTF_8);
+            String jsonString = new String(bytes, StandardCharsets.UTF_8);
+            
+            // Tạo đối tượng JSONObject từ chuỗi UTF-8
+            return new JSONObject(jsonString);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

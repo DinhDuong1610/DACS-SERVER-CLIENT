@@ -538,7 +538,8 @@ public class MainUI extends JFrame {
 		frameLogin.getContentPane().add(login);
 		
 		frameLogin.setVisible(true);
-		setVisible(false);
+		PublicEvent.getInstance().getEventLogin().goLogin();
+		setVisible(false);		
 		
 		
 // <LOGIN/>		

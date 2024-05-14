@@ -1,10 +1,16 @@
 package view.ChatUI.form;
 
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.*;
 
@@ -14,11 +20,15 @@ import view.ChatUI.event.PublicEvent;
 import view.ChatUI.swing.PanelSlide;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
+
+import com.mysql.cj.protocol.x.SyncFlushDeflaterOutputStream;
+
 import io.socket.client.Ack;
 import model.Chat.Model_Message;
 import model.Chat.Model_Register;
 import model.Chat.Model_User_Account;
 import service.Service;
+import java.awt.Component;
 
 public class Login extends JPanel {
 
@@ -26,8 +36,9 @@ public class Login extends JPanel {
 	private P_Login login;
 	private P_Register register;
 
-    public Login(JFrame frameParent) {
-    	
+    public Login(JFrame frameParent) {    	
+    	setSize(1554, 850);
+        
     	slide = new PanelSlide();
     	
         slide.setBackground(new java.awt.Color(255, 255, 255));
@@ -49,6 +60,9 @@ public class Login extends JPanel {
     				.addGap(192))
     	);
     	setLayout(groupLayout);
+        
+        
+        add(slide);
 
         PublicEvent.getInstance().addEventLogin(new EventLogin() {
             @Override
@@ -69,12 +83,12 @@ public class Login extends JPanel {
             }
             @Override
             public void goRegister() {
-                slide.show(1);
+                slide.show(0);
             }
 
             @Override
             public void goLogin() {
-                slide.show(0);
+                slide.show(1);
             }
         });
       
@@ -82,8 +96,17 @@ public class Login extends JPanel {
         register = new P_Register();
 //        slide.setLayout(new CardLayout());
         slide.setLayout(new FlowLayout());
-        slide.init(login, register);
-
+        slide.init(register, login);
+        
+        
+//    	JLabel background = new JLabel(new ImageIcon(getClass().getResource("/images/background/bg1.jpg")));
+    	JLabel background = new JLabel(new ImageIcon(new ImageIcon(getClass().getResource("/images/background/bg_login.jpg"))
+    	        .getImage().getScaledInstance(1554, 850, Image.SCALE_SMOOTH)));
+    	background.setBounds(0, 0, 1554, 850);
+        background.setOpaque(false);
+    	add(background);
+    	setComponentZOrder(background, 0);
+    	
     }
 
 	public P_Login getLogin() {

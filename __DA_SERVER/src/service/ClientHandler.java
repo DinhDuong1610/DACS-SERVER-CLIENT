@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -44,8 +45,10 @@ public class ClientHandler extends Thread{
     
     public void sendMessage(JSONObject jsonData) {
             try {
-    			out.writeBytes(jsonData.toString() + "\n");
-    			out.flush();
+//    			out.writeBytes(jsonData.toString() + "\n");
+                OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+                writer.write(jsonData.toString() + "\n");
+                writer.flush();
     		} catch (IOException e) {
     			e.printStackTrace();
     		}
@@ -76,6 +79,7 @@ public class ClientHandler extends Thread{
 	                if (message != null) { // Client disconnected
 //		                System.out.println("server: " + message);
 		                service.listen(this, message);
+		                service.textArea.append("UTF_8 :" + message);
 //		                broadcast(message);
 	                }
 	            } catch (Exception e) {

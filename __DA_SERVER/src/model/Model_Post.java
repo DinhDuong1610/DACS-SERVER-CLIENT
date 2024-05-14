@@ -1,6 +1,13 @@
 package model;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 public class Model_Post {
 	private int postId;
@@ -32,9 +39,27 @@ public class Model_Post {
             e.printStackTrace();
         }
     }
+//    
+//    public JSONObject toJsonObject(String type) {
+//    	try {
+//			JSONObject json = new JSONObject();
+//			json.put("type", type);
+//			json.put("postId", postId);
+//			json.put("projectId", projectId);
+//			json.put("userName", userName);
+//			json.put("avatarPath", avatarPath);
+//			json.put("timing", timing);
+//			json.put("content", content);
+//			return json;
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return null;
+//		}
+//    }
     
-    public JSONObject toJsonObject(String type) {
-    	try {
+  
+  public JSONObject toJsonObject(String type) {
+  		try {
 			JSONObject json = new JSONObject();
 			json.put("type", type);
 			json.put("postId", postId);
@@ -43,12 +68,20 @@ public class Model_Post {
 			json.put("avatarPath", avatarPath);
 			json.put("timing", timing);
 			json.put("content", content);
-			return json;
+//			return json;
+			
+            // Chuyển đổi JSONObject thành chuỗi UTF-8
+            byte[] bytes = json.toString().getBytes(StandardCharsets.UTF_8);
+            String jsonString = new String(bytes, StandardCharsets.UTF_8);
+          
+          // Tạo đối tượng JSONObject từ chuỗi UTF-8
+          return new JSONObject(jsonString);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
-    }
+  }
+    
 	
 	public Model_Post() {
 	}

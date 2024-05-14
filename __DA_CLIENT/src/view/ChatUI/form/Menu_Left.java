@@ -14,6 +14,7 @@ import view.ChatUI.event.PublicEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.ScrollPaneConstants;
@@ -24,6 +25,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.util.List;
+import javax.swing.SwingConstants;
 
 public class Menu_Left extends JPanel{
 	private JLayeredPane panel_menu_list;
@@ -31,48 +33,57 @@ public class Menu_Left extends JPanel{
 
 	public Menu_Left() {
 		setSize(300, 803);
-		setLayout(new MigLayout("fillx, filly", "0[300]0", "0[50]0[35]0[100%,fill]0"));
-		JPanel panel_menu = new JPanel();
-		add(panel_menu, "width 300:300:300, wrap");
-		panel_menu.setLayout(new GridLayout(1, 2, 0, 0));
+		setLayout(new MigLayout("fillx, filly", "0[300]0", "0[50]0[100%,fill]0"));
+//		JPanel panel_menu = new JPanel();
+//		add(panel_menu, "width 300:300:300, wrap");
+//		panel_menu.setLayout(new GridLayout(1, 2, 0, 0));
 		
-		JButton bt_chat2P = new JButton("");
-		bt_chat2P.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				showPeople();
-			}
-		});
-		panel_menu.add(bt_chat2P);
+		JLabel label = new JLabel("MESSAGE");
+		label.setForeground(new Color(255, 255, 255));
+		label.setFont(new Font("Gill Sans Ultra Bold Condensed", Font.BOLD, 26));
+		label.setBackground(new Color(0, 191, 255));
+		label.setOpaque(true);
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		add(label, "width 300:300:300, height 50:50:50, wrap");
 		
-		JButton bt_chatGroup = new JButton("");
-		bt_chatGroup.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				showGroup();
-			}
-		});
-		panel_menu.add(bt_chatGroup);
-		
-		bt_chat2P.setIcon(new ImageIcon((new ImageIcon((MainUI.class.getResource("/images/icon/chat2p.png"))).getImage())));
-		bt_chatGroup.setIcon(new ImageIcon((new ImageIcon((MainUI.class.getResource("/images/icon/chatgroup.png"))).getImage())));
+//		JButton bt_chat2P = new JButton("");
+//		bt_chat2P.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				showPeople();
+//			}
+//		});
+//		panel_menu.add(bt_chat2P);
+//		
+//		JButton bt_chatGroup = new JButton("");
+//		bt_chatGroup.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				showGroup();
+//			}
+//		});
+//		panel_menu.add(bt_chatGroup);
+//		
+//		bt_chat2P.setIcon(new ImageIcon((new ImageIcon((MainUI.class.getResource("/images/icon/chat2p.png"))).getImage())));
+//		bt_chatGroup.setIcon(new ImageIcon((new ImageIcon((MainUI.class.getResource("/images/icon/chatgroup.png"))).getImage())));
+//		
 		
 		panel_menu_list = new JLayeredPane();
 		panel_menu_list.setLayout(new MigLayout("fillx", "2[300]2", "3[]3"));
 		
-		JTextField tf_searchUser = new JTextField();
-		tf_searchUser.setFont(new Font("SansSerif", Font.PLAIN, 18));
-		tf_searchUser.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String user = tf_searchUser.getText();
-                if(searchUser(user)) {
-//                	PublicEvent.getInstance().getEventMenuLeft().newUser(list_user);
-                }
-                else {
-                	JOptionPane.showMessageDialog(panel_menu_list, "NOT FOUND USER");
-                }
-            }
-        });
-		add(tf_searchUser, "width 300:300:300, height 35:35:35, wrap");
+//		JTextField tf_searchUser = new JTextField();
+//		tf_searchUser.setFont(new Font("SansSerif", Font.PLAIN, 18));
+//		tf_searchUser.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                String user = tf_searchUser.getText();
+//                if(searchUser(user)) {
+////                	PublicEvent.getInstance().getEventMenuLeft().newUser(list_user);
+//                }
+//                else {
+//                	JOptionPane.showMessageDialog(panel_menu_list, "NOT FOUND USER");
+//                }
+//            }
+//        });
+//		add(tf_searchUser, "width 300:300:300, height 35:35:35, wrap");
 		
 		userAccount = new ArrayList<>();
         PublicEvent.getInstance().addEventMenuLeft(new EventMenuLeft() {
@@ -88,7 +99,7 @@ public class Menu_Left extends JPanel{
             @Override
             public void newUser(Model_User_Account d) {	
                     userAccount.add(d);
-                    panel_menu_list.add(new Item_People(d), "width 296:296:296, height 50:50:50, wrap");
+                    panel_menu_list.add(new Item_People(d), "width 285:285:285, height 50:50:50, wrap");
                     panel_menu_list.repaint();
                     panel_menu_list.revalidate();
             }

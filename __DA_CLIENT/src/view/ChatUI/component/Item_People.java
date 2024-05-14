@@ -99,14 +99,16 @@ public class Item_People extends JPanel {
     public void active(boolean active) {
     	user.setStatus(active);
     	if(active) {
-            lb_status.setBackground(Color.GREEN);
-            lb_status.setForeground(Color.GREEN);
+//            lb_status.setBackground(Color.GREEN);
+//            lb_status.setForeground(Color.GREEN);
             lb_status.setOpaque(true);
+            lb_status.setIcon(new ImageIcon(getClass().getResource("/images/icon/online.jpg")));
     	}
     	else {
-            lb_status.setBackground(new Color(255, 255, 255));
-            lb_status.setForeground(new Color(255, 255, 255));
+//            lb_status.setBackground(new Color(255, 255, 255));
+//            lb_status.setForeground(new Color(255, 255, 255));
             lb_status.setOpaque(true);
+            lb_status.setIcon(new ImageIcon(getClass().getResource("/images/icon/offline.jpg")));
     	}
     }
 }

@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -90,7 +91,7 @@ public class Service {
     public void startClient(){
     	try {
         	client = new Socket(IP, PORT_NUMBER);
-            in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(client.getInputStream() , StandardCharsets.UTF_8));
             out = new DataOutputStream(client.getOutputStream());
             in_image = client.getInputStream();
             out_image = client.getOutputStream();
@@ -107,7 +108,7 @@ public class Service {
                     }
                     
                     if (message != null) {
-//                        System.out.println("client: " + message + "\n");
+                        System.out.println("client: " + message + "\n");
                         listen(message);
                     } else {
                         System.out.println("Client disconnected");
@@ -177,7 +178,7 @@ public class Service {
     	String data=new String(newdata);
 		try {
 			jsonData = new JSONObject(data);
-			System.out.println("server: " + jsonData.toString() + "\n");
+//			System.out.println("server: " + jsonData.toString() + "\n");
 	    	if(jsonData.getString("type").equals("register")) {
 	            String message = jsonData.getString("message");
 	            boolean action = jsonData.getBoolean("action");
@@ -499,8 +500,9 @@ public class Service {
     public void sendLogin(JSONObject jsonData) {
         new Thread(() -> {
             try {
-    			out.writeBytes(jsonData.toString() + "\n");
-    			out.flush();
+                OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+                writer.write(jsonData.toString() + "\n");
+                writer.flush();
     		} catch (IOException e) {
     			e.printStackTrace();
     		}
@@ -510,8 +512,9 @@ public class Service {
     public void sendRegister(JSONObject jsonData) {
         new Thread(() -> {
             try {
-    			out.writeBytes(jsonData.toString() + "\n");
-    			out.flush();
+                OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+                writer.write(jsonData.toString() + "\n");
+                writer.flush();
     		} catch (IOException e) {
     			e.printStackTrace();
     		}
@@ -521,8 +524,9 @@ public class Service {
     public void registerInfo(JSONObject jsonData) {
         new Thread(() -> {
             try {
-    			out.writeBytes(jsonData.toString() + "\n");
-    			out.flush();
+                OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+                writer.write(jsonData.toString() + "\n");
+                writer.flush();
     		} catch (IOException e) {
     			e.printStackTrace();
     		}
@@ -532,8 +536,9 @@ public class Service {
     public void updateInfo(JSONObject jsonData) {
         new Thread(() -> {
             try {
-    			out.writeBytes(jsonData.toString() + "\n");
-    			out.flush();
+                OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+                writer.write(jsonData.toString() + "\n");
+                writer.flush();
     		} catch (IOException e) {
     			e.printStackTrace();
     		}
@@ -543,8 +548,9 @@ public class Service {
     public void sendMessage(JSONObject jsonData) {
         new Thread(() -> {
             try {
-    			out.writeBytes(jsonData.toString() + "\n");
-    			out.flush();
+                OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+                writer.write(jsonData.toString() + "\n");
+                writer.flush();
     		} catch (IOException e) {
     			e.printStackTrace();
     		}
@@ -561,8 +567,9 @@ public class Service {
 		}
         new Thread(() -> {
             try {
-    			out.writeBytes(json.toString() + "\n");
-    			out.flush();
+                OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+                writer.write(json.toString() + "\n");
+                writer.flush();
     		} catch (IOException e) {
     			e.printStackTrace();
     		}
@@ -572,8 +579,9 @@ public class Service {
     public void addProject(JSONObject jsonData) {
         new Thread(() -> {
             try {
-    			out.writeBytes(jsonData.toString() + "\n");
-    			out.flush();
+                OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+                writer.write(jsonData.toString() + "\n");
+                writer.flush();
     		} catch (IOException e) {
     			e.printStackTrace();
     		}
@@ -589,8 +597,9 @@ public class Service {
 		}
         new Thread(() -> {
             try {
-    			out.writeBytes(json.toString() + "\n");
-    			out.flush();
+                OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+                writer.write(json.toString() + "\n");
+                writer.flush();
     		} catch (IOException e) {
     			e.printStackTrace();
     		}
@@ -607,8 +616,9 @@ public class Service {
 		}
         new Thread(() -> {
             try {
-    			out.writeBytes(json.toString() + "\n");
-    			out.flush();
+                OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+                writer.write(json.toString() + "\n");
+                writer.flush();
     		} catch (IOException e) {
     			e.printStackTrace();
     		}
@@ -626,8 +636,9 @@ public class Service {
 		}
         new Thread(() -> {
             try {
-    			out.writeBytes(json.toString() + "\n");
-    			out.flush();
+                OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+                writer.write(json.toString() + "\n");
+                writer.flush();
     		} catch (IOException e) {
     			e.printStackTrace();
     		}
@@ -635,14 +646,27 @@ public class Service {
     }
     
     
+//    public void postNews(JSONObject jsonData) {
+//        new Thread(() -> {
+//            try {
+//    			out.writeBytes(jsonData.toString() + "\n");
+//    			out.flush();
+//    		} catch (IOException e) {
+//    			e.printStackTrace();
+//    		}
+//        }).start(); 
+//    }
+    
     public void postNews(JSONObject jsonData) {
         new Thread(() -> {
             try {
-    			out.writeBytes(jsonData.toString() + "\n");
-    			out.flush();
-    		} catch (IOException e) {
-    			e.printStackTrace();
-    		}
+                // Sử dụng OutputStreamWriter để viết dữ liệu dưới dạng UTF-8
+                OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+                writer.write(jsonData.toString() + "\n");
+                writer.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }).start(); 
     }
     
@@ -657,8 +681,9 @@ public class Service {
 		}
         new Thread(() -> {
             try {
-    			out.writeBytes(json.toString() + "\n");
-    			out.flush();
+                OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+                writer.write(json.toString() + "\n");
+                writer.flush();
     		} catch (IOException e) {
     			e.printStackTrace();
     		}
@@ -673,8 +698,9 @@ public class Service {
 		}
         new Thread(() -> {
             try {
-    			out.writeBytes(jsonData.toString() + "\n");
-    			out.flush();
+                OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+                writer.write(jsonData.toString() + "\n");
+                writer.flush();
     		} catch (IOException e) {
     			e.printStackTrace();
     		}
@@ -689,8 +715,9 @@ public class Service {
 		}
         new Thread(() -> {
             try {
-    			out.writeBytes(jsonData.toString() + "\n");
-    			out.flush();
+                OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+                writer.write(jsonData.toString() + "\n");
+                writer.flush();
     		} catch (IOException e) {
     			e.printStackTrace();
     		}
@@ -706,8 +733,9 @@ public class Service {
 		}
         new Thread(() -> {
             try {
-    			out.writeBytes(json.toString() + "\n");
-    			out.flush();
+                OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+                writer.write(json.toString() + "\n");
+                writer.flush();
     		} catch (IOException e) {
     			e.printStackTrace();
     		}
@@ -717,8 +745,9 @@ public class Service {
     public void addMeeting(JSONObject jsonData) {
         new Thread(() -> {
             try {
-    			out.writeBytes(jsonData.toString() + "\n");
-    			out.flush();
+                OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+                writer.write(jsonData.toString() + "\n");
+                writer.flush();
     		} catch (IOException e) {
     			e.printStackTrace();
     		}
@@ -735,8 +764,9 @@ public class Service {
 		}
         new Thread(() -> {
             try {
-    			out.writeBytes(json.toString() + "\n");
-    			out.flush();
+                OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+                writer.write(json.toString() + "\n");
+                writer.flush();
     		} catch (IOException e) {
     			e.printStackTrace();
     		}
@@ -753,8 +783,9 @@ public class Service {
 		}
         new Thread(() -> {
             try {
-    			out.writeBytes(json.toString() + "\n");
-    			out.flush();
+                OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+                writer.write(json.toString() + "\n");
+                writer.flush();
     		} catch (IOException e) {
     			e.printStackTrace();
     		}
@@ -773,8 +804,9 @@ public class Service {
 		}
         new Thread(() -> {
             try {
-    			out.writeBytes(json.toString() + "\n");
-    			out.flush();
+                OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+                writer.write(json.toString() + "\n");
+                writer.flush();
     		} catch (IOException e) {
     			e.printStackTrace();
     		}
@@ -793,8 +825,9 @@ public class Service {
 		}
         new Thread(() -> {
             try {
-    			out.writeBytes(json.toString() + "\n");
-    			out.flush();
+                OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+                writer.write(json.toString() + "\n");
+                writer.flush();
     		} catch (IOException e) {
     			e.printStackTrace();
     		}
@@ -812,8 +845,9 @@ public class Service {
 		}
         new Thread(() -> {
             try {
-    			out.writeBytes(json.toString() + "\n");
-    			out.flush();
+                OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+                writer.write(json.toString() + "\n");
+                writer.flush();
     		} catch (IOException e) {
     			e.printStackTrace();
     		}
@@ -831,8 +865,9 @@ public class Service {
 		}
         new Thread(() -> {
             try {
-    			out.writeBytes(json.toString() + "\n");
-    			out.flush();
+                OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+                writer.write(json.toString() + "\n");
+                writer.flush();
     		} catch (IOException e) {
     			e.printStackTrace();
     		}
@@ -842,8 +877,9 @@ public class Service {
     public void messageMeeting(JSONObject jsonData) {
         new Thread(() -> {
             try {
-    			out.writeBytes(jsonData.toString() + "\n");
-    			out.flush();
+                OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+                writer.write(jsonData.toString() + "\n");
+                writer.flush();
     		} catch (IOException e) {
     			e.printStackTrace();
     		}

@@ -1,5 +1,6 @@
 package view.CommunityUI.form;
 
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -9,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -26,29 +28,66 @@ import view.MainUI;
 import view.ChatUI.component.Item_People;
 import view.ChatUI.event.EventMenuLeft;
 import view.ChatUI.event.PublicEvent;
+import view.CommunityUI.component.Chat_body_meeting;
+
 import javax.swing.SwingConstants;
 
 public class MenuLeft_Room extends JPanel{
 	private JLayeredPane panel_menu_list;
 	private List<Model_User_Account> userAccount;
 	private int projectId;
+	private JPanel panel_menu;
+	private CardLayout cardLayout;
+	private Chat_meeting chat_meeting;
+	private Meeting_room meeting_room;
+	private JPanel cardPanel;
 
-	public MenuLeft_Room(int projectId) {
+	public MenuLeft_Room(int projectId, Meeting_room meeting_room) {
+		this.meeting_room = meeting_room;
 		this.projectId = projectId;
 		
 		setSize(300, 803);
-		setLayout(new MigLayout("fillx, filly", "0[300]0", "0[35]0[100%,fill]0"));
+		setLayout(new MigLayout("fillx, filly", "0[300]0", "0[50]0[100%,fill]0"));
+		
+		panel_menu = new JPanel();
+		panel_menu.setLayout(new GridLayout(1, 2, 0, 0));
+		
+		JButton bt_chat2P = new JButton("");
+		bt_chat2P.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cardLayout.show(cardPanel, "member");
+			}
+		});
+		panel_menu.add(bt_chat2P);
+		
+		JButton bt_chatGroup = new JButton("");
+		bt_chatGroup.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cardLayout.show(cardPanel, "chat");
+			}
+		});
+		panel_menu.add(bt_chatGroup);
+		
+		bt_chat2P.setIcon(new ImageIcon((new ImageIcon((MainUI.class.getResource("/images/icon/chat2p.png"))).getImage())));
+		bt_chatGroup.setIcon(new ImageIcon((new ImageIcon((MainUI.class.getResource("/images/icon/chatgroup.png"))).getImage())));
+		
+		add(panel_menu, "width 300:300:300, height 50:50:50, wrap");
+		
+		cardPanel = new JPanel();
+		cardLayout = new CardLayout();
+		cardPanel.setLayout(cardLayout);
+		
 		
 		
 		panel_menu_list = new JLayeredPane();
 		panel_menu_list.setLayout(new MigLayout("fillx", "2[300]2", "3[]3"));
 		
-		JLabel label = new JLabel("NGƯỜI THAM GIA");
-		label.setOpaque(true);
-		label.setBackground(new Color(0, 191, 255));
-		label.setHorizontalAlignment(SwingConstants.CENTER);
-		label.setFont(new Font("Tahoma", Font.BOLD, 20));
-		add(label, "width 300:300:300, height 35:35:35, wrap");
+//		JLabel label = new JLabel("NGƯỜI THAM GIA");
+//		label.setOpaque(true);
+//		label.setBackground(new Color(0, 191, 255));
+//		label.setHorizontalAlignment(SwingConstants.CENTER);
+//		label.setFont(new Font("Tahoma", Font.BOLD, 20));
+//		add(label, "width 300:300:300, height 35:35:35, wrap");
 		
 		userAccount = new ArrayList<>();
 //        PublicEvent.getInstance().addEventMenuLeft(new EventMenuLeft() {
@@ -63,11 +102,17 @@ public class MenuLeft_Room extends JPanel{
 		
 		JScrollPane jScrollPane = new JScrollPane(panel_menu_list);
 		jScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		add(jScrollPane);
-		
+		cardPanel.add(jScrollPane, "member");		
 //		showPeople();
 		setBackground(Color.blue);
 		panel_menu_list.removeAll();
+		
+		
+		chat_meeting = new Chat_meeting(meeting_room);
+		cardPanel.add(chat_meeting, "chat");
+		cardPanel.repaint();
+				
+		add(cardPanel);
 	}
 	
 	 public void newUser(Model_User_Account d) {	
@@ -120,6 +165,18 @@ public class MenuLeft_Room extends JPanel{
 	public void setPanel_menu_list(JLayeredPane panel_menu_list) {
 		this.panel_menu_list = panel_menu_list;
 	}
+
+	public Chat_meeting getChat_meeting() {
+		return chat_meeting;
+	}
+
+	public Meeting_room getMeeting_room() {
+		return meeting_room;
+	}
+
+	
+	
+	
 	
 	
 }

@@ -65,7 +65,7 @@ public class Meeting_room extends JFrame {
 		
 		panel_main.setLayout(new MigLayout("fillx, filly", "0[300!]5[fill, 100%]0", "0[fill]0"));
 		
-		menuLeft = new MenuLeft_Room(projectId);
+		menuLeft = new MenuLeft_Room(projectId, this);
 		panel_main.add(menuLeft);
 		screen = new Screen(projectId, dout, dout2, this);
 		panel_main.add(screen);

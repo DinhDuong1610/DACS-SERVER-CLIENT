@@ -45,6 +45,7 @@ import model.Chat.Model_Receive_Message;
 import model.Chat.Model_User_Account;
 import model.calendar.Model_Calendar;
 import model.community.Model_Meeting;
+import model.community.Model_Message_Meeting;
 import model.community.Model_Post;
 import model.community.Model_Project;
 import view.MainUI;
@@ -299,6 +300,13 @@ public class Service {
     				main.getHome_community().getMeeting_room().getScreen().getPanel().setBackground(Color.black);   				
     			}
 	    	}
+	    	else if(jsonData.getString("type").equals("messageMeeting")) {   				
+    			if(main.getHome_community().getMeeting_room().getMeetingId() == jsonData.getInt("meetingId")) {
+    				Model_Message_Meeting message = new Model_Message_Meeting(jsonData);
+    				main.getHome_community().getMeeting_room().getMenuLeft().getChat_meeting().getChat_body_meeting().addItemLeft(message);
+    			}
+	    	}
+	    	
 
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -824,6 +832,17 @@ public class Service {
         new Thread(() -> {
             try {
     			out.writeBytes(json.toString() + "\n");
+    			out.flush();
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+        }).start(); 
+    }
+    
+    public void messageMeeting(JSONObject jsonData) {
+        new Thread(() -> {
+            try {
+    			out.writeBytes(jsonData.toString() + "\n");
     			out.flush();
     		} catch (IOException e) {
     			e.printStackTrace();

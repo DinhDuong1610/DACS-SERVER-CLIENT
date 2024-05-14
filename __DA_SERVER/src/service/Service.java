@@ -29,6 +29,7 @@ import model.Model_Calendar;
 import model.Model_Login;
 import model.Model_Meeting;
 import model.Model_Message;
+import model.Model_Message_Meeting;
 import model.Model_Post;
 import model.Model_Project;
 import model.Model_Receive_Message;
@@ -373,6 +374,16 @@ public class Service {
     	    		}
     	            for(Model_User_Account user : list) {    	    
     	            	broadcastMessage(user.getUser_Id()+"", json);
+    	            };
+    			}
+    			else if(jsonData.getString("type").equals("messageMeeting")) {
+    	            List<Model_User_Account> list = serviceCommunity.getMember(jsonData.getInt("projectId"));
+    	            if(list.size() == 0) textArea.append("rong!!!!");
+    	            Model_Message_Meeting message = new Model_Message_Meeting(jsonData);
+    	            for(Model_User_Account user : list) {
+    	            	if(user.getUser_Id() != Integer.parseInt(client.getUserId())) {
+        	            	broadcastMessage(user.getUser_Id()+"", message.toJsonObject("messageMeeting"));
+    	            	}
     	            };
     			}
 

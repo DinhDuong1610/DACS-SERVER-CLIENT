@@ -54,6 +54,7 @@ public class Menu_Left extends JPanel{
 		
 		bt_chat2P.setIcon(new ImageIcon((new ImageIcon((MainUI.class.getResource("/images/icon/chat2p.png"))).getImage())));
 		bt_chatGroup.setIcon(new ImageIcon((new ImageIcon((MainUI.class.getResource("/images/icon/chatgroup.png"))).getImage())));
+		
 		panel_menu_list = new JLayeredPane();
 		panel_menu_list.setLayout(new MigLayout("fillx", "2[300]2", "3[]3"));
 		

@@ -39,6 +39,10 @@ public class Chat_Left extends JLayeredPane{
     public void setImage(Icon... image) {
         txt.setImage(false, image);
     }
+    
+    public void setUserProfile(String user) {
+    	txt.setUserProfile(user);
+    }
 
     public void setTime() {
         Date currentTime = new Date();

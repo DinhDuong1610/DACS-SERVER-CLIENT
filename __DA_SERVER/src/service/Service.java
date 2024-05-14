@@ -249,9 +249,13 @@ public class Service {
     	            textArea.append("list post DONE \n");
     			}
     			else if(jsonData.getString("type").equals("addMeeting")) {
-    				Model_Meeting meeting = serviceCommunity.addMeeting(new Model_Meeting(jsonData));
-    	            broadcast(client.getUserId(), meeting.toJsonObject("addMeeting"));
-    	            textArea.append("Add meeting :" + meeting.toJsonObject("addMeeting") + "\n");    	           
+    				Model_Meeting meeting = serviceCommunity.addMeeting(new Model_Meeting(jsonData));    	               	            
+    	            List<Model_User_Account> list = serviceCommunity.getMember(jsonData.getInt("projectId"));
+    	            if(list.size() == 0) textArea.append("rong!!!!");
+    	            for(Model_User_Account user : list) {  
+        	            broadcast(user.getUser_Id() + "", meeting.toJsonObject("addMeeting"));
+        	            textArea.append("Add meeting :" + meeting.toJsonObject("addMeeting") + "\n");
+    	            };
     			}
     			else if(jsonData.getString("type").equals("listMeeting")) {
     	            List<Model_Meeting> list = serviceCommunity.getMeeting(jsonData.getInt("projectId"));

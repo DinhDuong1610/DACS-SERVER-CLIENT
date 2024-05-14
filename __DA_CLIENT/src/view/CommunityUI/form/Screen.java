@@ -22,6 +22,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.DatagramSocket;
 import java.awt.event.ActionEvent;
+import java.awt.SystemColor;
+import javax.swing.ImageIcon;
+import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class Screen extends JPanel{
 	private int projectId;
@@ -40,9 +43,10 @@ public class Screen extends JPanel{
 		
 		panel = new JPanel();
 		panel.setBackground(Color.black);
-		setBackground(new Color(169, 169, 169));
+		setBackground(SystemColor.scrollbar);
 
-		JButton bt_leave = new JButton("LEAVE");
+		JButton bt_leave = new JButton("");
+		bt_leave.setIcon(new ImageIcon(Screen.class.getResource("/images/background/icon_leave.png")));
 		bt_leave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dout.close();
@@ -63,12 +67,12 @@ public class Screen extends JPanel{
 					.addComponent(panel, GroupLayout.DEFAULT_SIZE, 1189, Short.MAX_VALUE)
 					.addContainerGap())
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(233)
-					.addComponent(panel_button_share, GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
-					.addGap(178)
-					.addComponent(bt_leave, GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
-					.addGap(165)
-					.addComponent(panel_button_voice, GroupLayout.PREFERRED_SIZE, 141, GroupLayout.PREFERRED_SIZE)
+					.addGap(302)
+					.addComponent(panel_button_share, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, 232, Short.MAX_VALUE)
+					.addComponent(bt_leave, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE)
+					.addGap(247)
+					.addComponent(panel_button_voice, GroupLayout.PREFERRED_SIZE, 59, GroupLayout.PREFERRED_SIZE)
 					.addGap(244))
 		);
 		groupLayout.setVerticalGroup(
@@ -78,16 +82,17 @@ public class Screen extends JPanel{
 					.addComponent(panel, GroupLayout.DEFAULT_SIZE, 740, Short.MAX_VALUE)
 					.addGap(18)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(panel_button_share, GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
 						.addComponent(panel_button_voice, GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
-						.addComponent(bt_leave, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE))
-					.addGap(23))
+						.addComponent(bt_leave, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
+						.addComponent(panel_button_share, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap())
 		);
 		
 		cardLayout_share = new CardLayout(0, 0);
 		panel_button_share.setLayout(cardLayout_share);
 		
-		JButton bt_on_share = new JButton("ON SHARE");
+		JButton bt_on_share = new JButton("");
+		bt_on_share.setIcon(new ImageIcon(Screen.class.getResource("/images/background/icon_share.png")));
 		bt_on_share.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
                 SwingUtilities.invokeLater(() -> {
@@ -98,7 +103,8 @@ public class Screen extends JPanel{
 		});
 		panel_button_share.add(bt_on_share, "bt_on_share");
 		
-		JButton bt_off_share = new JButton("OFF SHARE");
+		JButton bt_off_share = new JButton("");
+		bt_off_share.setIcon(new ImageIcon(Screen.class.getResource("/images/background/icon_stop_share.png")));
 		panel_button_share.add(bt_off_share, "bt_off_share");
 		bt_off_share.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -113,7 +119,8 @@ public class Screen extends JPanel{
 		cardLayout_mic = new CardLayout(0, 0);
 		panel_button_voice.setLayout(cardLayout_mic);
 		
-		JButton bt_on_mic = new JButton("ON MIC");
+		JButton bt_on_mic = new JButton("");
+		bt_on_mic.setIcon(new ImageIcon(Screen.class.getResource("/images/background/icon_on_mic.png")));
 		bt_on_mic.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cardLayout_mic.next(panel_button_voice);
@@ -124,7 +131,8 @@ public class Screen extends JPanel{
 		panel_button_voice.add(bt_on_mic, "bt_on_mic");
 		setLayout(groupLayout);
 		
-		JButton bt_off_mic= new JButton("OFF MIC");
+		JButton bt_off_mic= new JButton("");
+		bt_off_mic.setIcon(new ImageIcon(Screen.class.getResource("/images/background/icon_off_mic.png")));
 		bt_off_mic.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cardLayout_mic.next(panel_button_voice);

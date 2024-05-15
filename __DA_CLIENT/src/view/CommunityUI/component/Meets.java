@@ -14,6 +14,8 @@ public class Meets extends JPanel{
 	
 	public void addMeet(Model_Meeting meeting) {
 		add(new Item_meet(meeting) , "wrap");
+        repaint();
+        revalidate();
 	}
 	
     public boolean hasMeet() {

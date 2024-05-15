@@ -121,6 +121,7 @@ public class Chat_Body extends javax.swing.JPanel {
         repaint();
         revalidate();
         updateScroll();  
+        updateScroll(); 
     }
     
 //    public void addItemFile(String text, String user, String fileName, String fileSize) {

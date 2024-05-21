@@ -5,12 +5,16 @@ import java.awt.GridLayout;
 import java.awt.Window;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.*;
 
 import controller.Community.Controller_Post;
+import controller.Community.Controller_Progress;
+import model.Model_XML;
 import model.Chat.Model_User_Account;
 import model.community.Model_Post;
+import model.community.Model_Prog;
 import model.community.Model_Project;
 import net.miginfocom.swing.MigLayout;
 import service.Service;
@@ -27,24 +31,40 @@ public class Page extends JPanel{
 	private JDialog dialog;
 	private Model_Project project;
 	private JScrollPane sp;
+	private JPanel panel_prog;
+	private Progs progs;
+	private Item_button_prog button_prog;
+	private NewProg newProg;
+	private Controller_Progress action_prog;
+	private JDialog dialog2;
+	private JScrollPane sp2;
+	private JScrollPane sp3;
 	
 	public Page(Model_Project project) {
 		this.project = project;
 		action_post = new Controller_Post(this);
+		action_prog = new Controller_Progress(this);
 		
 		panel_post = new JPanel();
 		panel_event = new JPanel();
+		panel_prog = new JPanel();
 		
 		cardLayout_Page = new CardLayout();
 		setLayout(cardLayout_Page);
 		add(panel_post, "panel_post");
 		add(panel_event, "panel_event");
+		add(panel_prog, "panel_prog");
 		
 		news = new News(project);
 		newPost = new NewPost();
 		meets = new Meets();
+		progs = new Progs();
+		button_prog = new Item_button_prog();
 		
 		newPost.getBt_newPost().addActionListener(action_post);
+		button_prog.getBt_new().addActionListener(action_prog);
+		button_prog.getBt_import().addActionListener(action_prog);
+		button_prog.getBt_export().addActionListener(action_prog);
 		
 		panel_post.setLayout(new MigLayout("fillx", "0[fill]0", "0[120!]0[100%, fill]0"));
 		
@@ -55,10 +75,19 @@ public class Page extends JPanel{
 		panel_post.add(sp);	
 		
 		panel_event.setLayout(new MigLayout("fillx", "0[fill]0", "15[100%, fill]0"));
-		JScrollPane sp2 = new JScrollPane(meets);
+		sp2 = new JScrollPane(meets);
 		sp2.setBorder(null);
 		sp2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		panel_event.add(sp2);
+		
+		panel_prog.setLayout(new MigLayout("fillx", "0[fill]0", "0[70!]0[100%, fill]0"));
+		panel_prog.add(button_prog, "wrap");
+		sp3 = new JScrollPane(progs);
+		sp3.setBorder(null);
+		sp3.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		panel_prog.add(sp3);
+		
+		newProg = new NewProg();
 		
 	}
 	
@@ -73,7 +102,7 @@ public class Page extends JPanel{
 		dialog.add(startNewPost);
 		dialog.setVisible(true);
 	}
-	
+		
 	public void postNewPost() {
 		String userName = Service.getInstance().getUser().getFullName();
 		String avatarPath = Service.getInstance().getUser().getAvatar_path();
@@ -89,12 +118,59 @@ public class Page extends JPanel{
 		dialog.dispose();
 	}
 	
+	public void startNewProg() {
+		newProg = new NewProg();
+		newProg.getBt_add().addActionListener(action_prog);
+//		result = JOptionPane.showOptionDialog(this, startNewPost, null, JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
+		dialog2 = new JDialog();
+		dialog2.setLayout(new GridLayout(1,1));
+		dialog2.setSize(800, 550);
+		dialog2.setLocationRelativeTo(null);
+		dialog2.add(newProg);
+		dialog2.setVisible(true);
+	}
+	
+	public void newProg() {
+		String content = newProg.getTextArea().getText();	
+        Date currentTime = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd-MM-yyyy");
+        String timing = dateFormat.format(currentTime);
+        Model_Prog prog = new Model_Prog(0, project.getProjectId(), content , timing);
+        Service.getInstance().newProg(prog.toJsonObject("newProg"));
+        updateScroll();
+		dialog2.dispose();
+	}
+	
+	public void exportProg() {
+		List<Model_Prog> progList = progs.getAllProgs();
+		Model_XML.exportToXML(progList);
+	}
+	
+	public void importProg() {
+		List<Model_Prog> importedList = Model_XML.importFromEncryptedXML();
+        for (Model_Prog prog : importedList) {
+            progs.addProg(prog);
+        }
+	}
+	
     public void updateScroll() {
         SwingUtilities.invokeLater(() -> {
             JScrollBar verticalScrollBar = sp.getVerticalScrollBar();
             verticalScrollBar.setValue(verticalScrollBar.getMaximum());
             sp.revalidate(); 
             sp.repaint(); 
+        });
+        SwingUtilities.invokeLater(() -> {
+            JScrollBar verticalScrollBar = sp2.getVerticalScrollBar();
+            verticalScrollBar.setValue(verticalScrollBar.getMaximum());
+            sp2.revalidate(); 
+            sp2.repaint(); 
+        });
+        SwingUtilities.invokeLater(() -> {
+            JScrollBar verticalScrollBar = sp3.getVerticalScrollBar();
+            verticalScrollBar.setValue(verticalScrollBar.getMaximum());
+            sp3.revalidate(); 
+            sp3.repaint(); 
         });
     }
     
@@ -142,7 +218,22 @@ public class Page extends JPanel{
 	public void setMeets(Meets meets) {
 		this.meets = meets;
 	}
-	
+
+	public Item_button_prog getButton_prog() {
+		return button_prog;
+	}
+
+	public JDialog getDialog2() {
+		return dialog2;
+	}
+
+	public NewProg getNewProg() {
+		return newProg;
+	}
+
+	public Progs getProgs() {
+		return progs;
+	}
 	
 	
 }

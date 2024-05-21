@@ -30,6 +30,7 @@ public class Title extends JPanel{
 	private JLabel lb_nameProject;
 	private JButton bt_newMeeting;
 	private JButton bt_member;
+	private JButton bt_progress;
 
 	public Title(Model_Project project) {
 		this.project = project;
@@ -54,6 +55,11 @@ public class Title extends JPanel{
 		bt_member = new JButton("Member");
 		bt_member.setFont(new Font("Tahoma", Font.BOLD, 15));
 		bt_member.setBackground(new Color(242, 242, 242));
+		
+		bt_progress = new JButton("Progres");
+		bt_progress.setFont(new Font("Tahoma", Font.BOLD, 18));
+		bt_progress.setBorder(null);
+		bt_progress.setBackground(new Color(242, 242, 242));
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -64,7 +70,9 @@ public class Title extends JPanel{
 					.addComponent(bt_post, GroupLayout.PREFERRED_SIZE, 81, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(bt_event, GroupLayout.PREFERRED_SIZE, 83, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 191, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(bt_progress, GroupLayout.PREFERRED_SIZE, 83, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, 181, Short.MAX_VALUE)
 					.addComponent(bt_newMeeting)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(bt_member)
@@ -78,9 +86,10 @@ public class Title extends JPanel{
 						.addComponent(bt_member, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
 						.addComponent(bt_newMeeting, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
 					.addContainerGap())
-				.addComponent(lb_nameProject, GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
-				.addComponent(bt_event, GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
-				.addComponent(bt_post, GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
+				.addComponent(lb_nameProject, GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
+				.addComponent(bt_event, GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
+				.addComponent(bt_post, GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
+				.addComponent(bt_progress, GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
 		);
 		setLayout(groupLayout);
 		
@@ -93,13 +102,9 @@ public class Title extends JPanel{
 		return bt_newMeeting;
 	}
 
-
-
 	public JButton getBt_member() {
 		return bt_member;
 	}
-
-
 
 	public JButton getBt_post() {
 		return bt_post;
@@ -107,6 +112,10 @@ public class Title extends JPanel{
 
 	public JButton getBt_event() {
 		return bt_event;
+	}
+	
+	public JButton getBt_progress() {
+		return bt_progress;
 	}
 
 	public JLabel getLb_nameProject() {
@@ -125,9 +134,4 @@ public class Title extends JPanel{
 		this.project = project;
 		lb_nameProject.setText(project.getProjectName());
 	}
-	
-	
-
-	
-	
 }

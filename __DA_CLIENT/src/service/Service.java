@@ -21,10 +21,21 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
@@ -48,6 +59,7 @@ import model.calendar.Model_Calendar;
 import model.community.Model_Meeting;
 import model.community.Model_Message_Meeting;
 import model.community.Model_Post;
+import model.community.Model_Prog;
 import model.community.Model_Project;
 import view.MainUI;
 import view.ChatUI.event.PublicEvent;
@@ -102,18 +114,20 @@ public class Service {
             while (true) {
                 try {
 //                    String message = in.readLine(); 
+                	
                     String message;
                     synchronized (in) {
                         message = in.readLine();
                     }
                     
                     if (message != null) {
-                        System.out.println("client: " + message + "\n");
+//                        System.out.println("client: " + message + "\n");
                         listen(message);
                     } else {
                         System.out.println("Client disconnected");
                         break;
                     }
+                	
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -230,14 +244,30 @@ public class Service {
 	    	else if(jsonData.getString("type").equals("postNews")) {
 	    		Model_Post post = new Model_Post(jsonData);
 	    		main.getHome_community().getBody().getPage().getNews().post(post);
+	    		main.getHome_community().getBody().getPage().updateScroll();
+	    	}
+	    	else if(jsonData.getString("type").equals("newProg")) {
+	    		Model_Prog prog = new Model_Prog(jsonData);
+	    		main.getHome_community().getBody().getPage().getProgs().addProg(prog);
+	    		main.getHome_community().getBody().getPage().updateScroll();
 	    	}
 	    	else if(jsonData.getString("type").equals("listPost")) {
 	    		JSONArray jsonArray = jsonData.getJSONArray("jsonArray");
 	            for (int i = 0; i < jsonArray.length(); i++) {
 	                JSONObject json = jsonArray.getJSONObject(i);
 	                Model_Post post = new Model_Post(json);
-	                main.getHome_community().getBody().getPage().getNews().post(post);	            
+	                main.getHome_community().getBody().getPage().getNews().post(post);
+	                main.getHome_community().getBody().getPage().updateScroll();
 	            }
+	    	}
+	    	else if(jsonData.getString("type").equals("listProg")) {
+	    		JSONArray jsonArray = jsonData.getJSONArray("jsonArray");
+	            for (int i = 0; i < jsonArray.length(); i++) {
+	                JSONObject json = jsonArray.getJSONObject(i);
+	                Model_Prog prog = new Model_Prog(json);
+	                main.getHome_community().getBody().getPage().getProgs().addProg(prog);	            
+	            }
+	            main.getHome_community().getBody().getPage().updateScroll();
 	    	}
 	    	else if(jsonData.getString("type").equals("listMember")) {
 	    		Model_User_Account user = new Model_User_Account(jsonData);
@@ -258,6 +288,7 @@ public class Service {
 	    	else if(jsonData.getString("type").equals("addMeeting")) {
 	    		Model_Meeting meeting = new Model_Meeting(jsonData);
 	    		main.getHome_community().getBody().getPage().getMeets().addMeet(meeting);
+	    		main.getHome_community().getBody().getPage().updateScroll();
 	    	}
 	    	else if(jsonData.getString("type").equals("listMeeting")) {
 	    		JSONArray jsonArray = jsonData.getJSONArray("jsonArray");
@@ -267,6 +298,7 @@ public class Service {
 	                Model_Meeting meeting = new Model_Meeting(json);
 		    		main.getHome_community().getBody().getPage().getMeets().addMeet(meeting);
 	            }
+	            main.getHome_community().getBody().getPage().updateScroll();
 	    	}
 	    	else if(jsonData.getString("type").equals("active")) {
 	    		int id = jsonData.getInt("userId");
@@ -496,7 +528,7 @@ public class Service {
 			e.printStackTrace();
 		}
     }
-
+	
     public void sendLogin(JSONObject jsonData) {
         new Thread(() -> {
             try {
@@ -508,6 +540,8 @@ public class Service {
     		}
         }).start();
     }
+	
+	
     
     public void sendRegister(JSONObject jsonData) {
         new Thread(() -> {
@@ -624,6 +658,25 @@ public class Service {
     		}
         }).start(); 
     }
+    
+    public void listProg(int projectId) {
+    	JSONObject json = new JSONObject();
+		try {
+			json.put("type", "listProg");
+			json.put("projectId", projectId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        new Thread(() -> {
+            try {
+                OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+                writer.write(json.toString() + "\n");
+                writer.flush();
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+        }).start(); 
+    }
 
     
     public void listMember(int projectId) {
@@ -658,6 +711,19 @@ public class Service {
 //    }
     
     public void postNews(JSONObject jsonData) {
+        new Thread(() -> {
+            try {
+                // Sử dụng OutputStreamWriter để viết dữ liệu dưới dạng UTF-8
+                OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8);
+                writer.write(jsonData.toString() + "\n");
+                writer.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start(); 
+    }
+    
+    public void newProg(JSONObject jsonData) {
         new Thread(() -> {
             try {
                 // Sử dụng OutputStreamWriter để viết dữ liệu dưới dạng UTF-8

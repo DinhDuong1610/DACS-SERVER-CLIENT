@@ -80,6 +80,7 @@ public class Body extends JPanel{
 		CardLayout_Community action_cardLayout_Community = new CardLayout_Community(this);
 		getTitle().getBt_post().addActionListener(action_cardLayout_Community);
 		getTitle().getBt_event().addActionListener(action_cardLayout_Community);
+		getTitle().getBt_progress().addActionListener(action_cardLayout_Community);
 	}
 	
 	

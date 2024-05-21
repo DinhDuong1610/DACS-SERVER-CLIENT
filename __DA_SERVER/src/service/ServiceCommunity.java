@@ -10,6 +10,7 @@ import connection.DatabaseConnection;
 import model.Model_Community;
 import model.Model_Meeting;
 import model.Model_Post;
+import model.Model_Prog;
 import model.Model_Project;
 import model.Model_User_Account;
 
@@ -25,6 +26,8 @@ public class ServiceCommunity {
     private final String SELECT_USER = "select User_ID, UserName,fullName, Email, Phone, Address, Avatar_path from user_account where userName=?";
     private final String INSERT_MEETING = "INSERT INTO meeting (projectId, title, time) VALUES (?,?,?)";
     private final String SELECT_MEETING = "SELECT meetingId, projectId, title, time FROM meeting WHERE projectId=?";
+    private final String INSERT_PROG = "INSERT INTO progress (projectId, content, time) VALUES (?, ?, ?)";
+    private final String SELECT_PROG = "SELECT progId, projectId, content, time FROM progress WHERE projectId=?";
     
     public ServiceCommunity(int user_Id) {
         this.con = DatabaseConnection.getInstance().getConnection();
@@ -77,6 +80,25 @@ public class ServiceCommunity {
     	return post;
     }
     
+    public Model_Prog newProg(Model_Prog prog) {
+    	try {
+    		PreparedStatement p = con.prepareStatement(INSERT_PROG, PreparedStatement.RETURN_GENERATED_KEYS);
+            p.setInt(1, prog.getProjectId());
+            p.setString(2, prog.getContent());
+            p.setString(3, prog.getTime());
+            p.execute();
+            ResultSet r = p.getGeneratedKeys();
+            r.first();
+            int progId = r.getInt(1);
+            prog.setProgId(progId);
+            r.close();
+            p.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	return prog;
+    }
+    
     public List<Model_Project> getProject(int User_Id) {
         List<Model_Project> list = new ArrayList<>();
         try {
@@ -112,6 +134,28 @@ public class ServiceCommunity {
             	String content = r.getString(6);
             	Model_Post post = new Model_Post(postId, proId, userName, avatarPath, timing, content);
             	list.add(post);
+            }
+            r.close();
+            p.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        return list;
+    }
+    
+    public List<Model_Prog> getProg(int projectId) {
+        List<Model_Prog> list = new ArrayList<>();
+        try {
+            PreparedStatement p = con.prepareStatement(SELECT_PROG);
+            p.setInt(1, projectId);
+            ResultSet r = p.executeQuery();
+            while (r.next()) {
+            	int progId = r.getInt(1);
+            	int proId = r.getInt(2);
+            	String content = r.getString(3);
+            	String time = r.getString(4);
+            	Model_Prog prog = new Model_Prog(progId, proId, content, time);
+            	list.add(prog);
             }
             r.close();
             p.close();

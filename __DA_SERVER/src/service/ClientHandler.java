@@ -11,12 +11,23 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.ArrayList;
+import java.util.Base64;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
 import javax.imageio.ImageIO;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
 
 public class ClientHandler extends Thread{
     private BufferedReader in;
@@ -53,6 +64,7 @@ public class ClientHandler extends Thread{
     			e.printStackTrace();
     		}
     }
+	
     
     public void sendImage(BufferedImage img){
         try {
@@ -65,6 +77,14 @@ public class ClientHandler extends Thread{
 		} catch (Exception e) {
 //			e.printStackTrace();
 		}
+    }
+    
+    private String decryptAES(String encryptedMessage, SecretKey secretKey) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+        Cipher decryptCipher = Cipher.getInstance("AES");
+        decryptCipher.init(Cipher.DECRYPT_MODE, secretKey);
+        byte[] encryptedBytes = Base64.getDecoder().decode(encryptedMessage);
+        byte[] decryptedBytes = decryptCipher.doFinal(encryptedBytes);
+        return new String(decryptedBytes);
     }
 
 	@Override
@@ -82,6 +102,7 @@ public class ClientHandler extends Thread{
 		                service.textArea.append("UTF_8 :" + message);
 //		                broadcast(message);
 	                }
+	            	
 	            } catch (Exception e) {
 	                e.printStackTrace();
     	            try {

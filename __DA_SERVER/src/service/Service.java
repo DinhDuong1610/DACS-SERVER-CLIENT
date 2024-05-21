@@ -13,9 +13,12 @@ import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
@@ -32,6 +35,7 @@ import model.Model_Meeting;
 import model.Model_Message;
 import model.Model_Message_Meeting;
 import model.Model_Post;
+import model.Model_Prog;
 import model.Model_Project;
 import model.Model_Receive_Message;
 import model.Model_Register;
@@ -56,6 +60,7 @@ public class Service {
         }
         return instance;
     }
+
     
     private Service(JTextArea textArea) {
         this.textArea = textArea;
@@ -247,6 +252,29 @@ public class Service {
     	            json.put("jsonArray", jsonArray);
 	            	broadcast(client.getUserId(), json);
     	            textArea.append("list post DONE \n");
+    			}
+    			else if(jsonData.getString("type").equals("listProg")) {
+	            	textArea.append("list Prog :" +  jsonData + "\n");
+	            	textArea.append("project id :" +  jsonData.getInt("projectId") + "\n");
+    	            List<Model_Prog> list = serviceCommunity.getProg(jsonData.getInt("projectId"));
+    	            if(list.size() == 0) textArea.append("rong!!!!\n");
+    	            JSONArray jsonArray = new JSONArray();
+    	            for(Model_Prog prog : list) {   
+    	            	jsonArray.put(prog.toJsonObject("listProg"));
+    	            	textArea.append("list prog :" +  prog.toJsonObject("listProg") + "\n");
+    	            }
+    	            JSONObject json = new JSONObject();
+    	            json.put("type", "listProg");
+    	            json.put("jsonArray", jsonArray);
+	            	broadcast(client.getUserId(), json);
+    	            textArea.append("list prog DONE \n");
+    			}
+    			else if(jsonData.getString("type").equals("newProg")) {
+    				Model_Prog prog = new Model_Prog(jsonData);
+    				serviceCommunity = new ServiceCommunity(Integer.parseInt(client.getUserId()));
+    				Model_Prog prog1 = serviceCommunity.newProg(prog);
+    				broadcastCommunity(prog1.getProjectId(), prog1.toJsonObject("newProg"));
+    	            textArea.append("Post new :" + prog1.toJsonObject("newProg") + "\n");
     			}
     			else if(jsonData.getString("type").equals("addMeeting")) {
     				Model_Meeting meeting = serviceCommunity.addMeeting(new Model_Meeting(jsonData));    	               	            

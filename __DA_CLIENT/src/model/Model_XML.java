@@ -45,11 +45,9 @@ public class Model_XML {
             }
 
             try {
-                // Tạo tài liệu XML
                 DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
-                // Phần gốc của tài liệu
                 Document doc = docBuilder.newDocument();
                 Element rootElement = doc.createElement("model_progs");
                 doc.appendChild(rootElement);
@@ -91,8 +89,11 @@ public class Model_XML {
 
                 // Ghi khóa mã hóa và nội dung mã hóa vào file
                 try (FileWriter fileWriter = new FileWriter(fileToSave)) {
-                    fileWriter.write("Key:" + keyString + "\n");
-                    fileWriter.write("Encrypted XML:" + encryptedXml);
+//                    fileWriter.write("Key:" + keyString + "\n");
+//                    fileWriter.write("Encrypted XML:" + encryptedXml);
+                	
+                  fileWriter.write(keyString + "\n");
+                  fileWriter.write(encryptedXml);
                 }
 
                 System.out.println("File XML đã được mã hóa và lưu tại: " + fileToSave.getAbsolutePath());
@@ -117,16 +118,14 @@ public class Model_XML {
             	String keyLine = reader.readLine();
                 String encryptedXmlLine = reader.readLine();
                 
-//                if (keyLine != null && keyLine.contains(": ") && encryptedXmlLine != null && encryptedXmlLine.contains(": ")) {
-                    String keyString = keyLine.split(":")[1];
-                    String encryptedXml = encryptedXmlLine.split(":")[1];
-                    SecretKey secretKey = AESUtil.getKeyFromString(keyString);
-                    String decryptedXml = AESUtil.decrypt(encryptedXml, secretKey);
-                    List<Model_Prog> modelList = parseXMLString(decryptedXml);
-                    return modelList;
-//                } else {
-//                    System.out.println("Giải mã thất bại!");
-//                }      
+//                    String keyString = keyLine.split(":")[1];
+//                    String encryptedXml = encryptedXmlLine.split(":")[1];
+//                    SecretKey secretKey = AESUtil.getKeyFromString(keyString);
+//                    String decryptedXml = AESUtil.decrypt(encryptedXml, secretKey);
+                SecretKey secretKey = AESUtil.getKeyFromString(keyLine);
+                String decryptedXml = AESUtil.decrypt(encryptedXmlLine, secretKey);    
+                List<Model_Prog> modelList = parseXMLString(decryptedXml);
+                    return modelList;   
             } catch (Exception e) {
                 e.printStackTrace();
             }
